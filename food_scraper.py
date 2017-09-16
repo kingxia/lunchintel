@@ -5,6 +5,7 @@ import datetime, json, re, sys, urllib
 
 food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
               "burger", "pizza", "shake"]
+no_food_terms = ["not be served", "no lunch", "no dinner", "not be provided"]
 
 day_url = "http://hls.harvard.edu/calendar/%s"
 event_marker = 'class="url"'
@@ -33,6 +34,10 @@ class Event:
             score = 0
             for word in food_terms:
                 score += sentence.count(word)
+            for phrase in no_food_terms:
+                if sentence.find(phrase) != -1:
+                    score = 0
+                    break
             if score > 0:
                 food += " %s." % sentence.strip()
         return food if len(food) > 0 else None
