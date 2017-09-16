@@ -4,7 +4,7 @@
 import datetime, json, re, sys, urllib
 
 food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
-              "burger", "pizza", "shake"]
+              "burger", "pizza", "shake", "drinks"]
 no_food_terms = ["not be served", "no lunch", "no dinner", "not be provided"]
 
 day_url = "http://hls.harvard.edu/calendar/%s"
@@ -41,6 +41,12 @@ class Event:
             if score > 0:
                 food += " %s." % sentence.strip()
         return food if len(food) > 0 else None
+
+    def short_str(self):
+        if self.error:
+            return self.error
+        return "%s: (%s - %s)." % \
+               (self.name, str(self.start.time()), str(self.end.time()))
 
     def __str__(self):
         if self.error:
