@@ -3,7 +3,8 @@
 
 import datetime, json, sys, urllib
 
-food_terms = ["lunch", "dinner", "snack", "food", "served", "provided"]
+food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
+              "burger", "pizza", "shake"]
 
 day_url = "http://hls.harvard.edu/calendar/%s"
 event_marker = 'class="url"'
@@ -39,8 +40,8 @@ class Event:
     def __str__(self):
         if self.error:
             return self.error
-        return "%s: (%s - %s). %s" % \
-               (self.name, str(self.start), str(self.end), self.food)
+        return "%s: (%s - %s).\n\t%s" % \
+               (self.name, str(self.start.time()), str(self.end.time()), self.food)
 
 def extract_url(line):
     href = line.split(" ")[2]
@@ -72,6 +73,7 @@ def main():
     today = datetime.datetime.today()
     offset = today + datetime.timedelta(days = date_offset)
     events = [get_event(event) for event in get_events(offset.date())]
+    print "Events for %s" % offset.date()
     for event in events:
         if not event.has_food():
             continue
