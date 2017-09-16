@@ -34,6 +34,8 @@ class FoodRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     """
 
     server_version = "SimpleHTTP/" + __version__
+    day_cache = {}
+    event_cache = {}
 
     def do_GET(self):
         """Serve a GET request."""
@@ -97,7 +99,7 @@ class FoodRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         """
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = 2)
-        food = food_scraper.get_food_listings(today.date())
+        food = food_scraper.get_food_listings(today.date(), self.day_cache, self.event_cache)
         
         f = StringIO()
         displaypath = cgi.escape(urllib.unquote(self.path))
