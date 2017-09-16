@@ -53,11 +53,13 @@ def get_filtered_lines(url, marker):
 
 # Date should be a datetime object.
 def get_events(date):
+    debug('get_events(%s)' % date)
     url_lines = get_filtered_lines(day_url % str(date), event_marker)
     urls = [extract_url(line) for line in url_lines]
     return urls
 
 def get_event(url):
+    debug('get_event(%s)' % url)
     event_data = get_filtered_lines(url, description_marker)[0]
     try:
         details = json.loads(event_data.split("[")[1].split("]")[0])
@@ -67,6 +69,21 @@ def get_event(url):
     except ValueError:
         event = Event(None, None, None, None, json_parse_error % url)
     return event
+
+def get_food_listings(date):
+    debug('get_food_listings(%s)' % date)
+    events = [get_event(event) for event in get_events(date)]
+    output = []
+    for event in events:
+        if not event.has_food():
+            continue
+        output.append(event)
+    return output
+
+def debug(message):
+    if __name__ == "__main__":
+        return
+    print message
 
 def main():
     date_offset = 0 if len(sys.argv) < 2 else int(sys.argv[1])
