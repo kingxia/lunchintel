@@ -116,13 +116,19 @@ class FoodRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         displaypath = cgi.escape(urllib.unquote(self.path))
         f.write('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">')
         f.write("<html>\n<title>Lunch!</title>\n")
-        f.write("<body>\n<h2>Food events for %s</h2>\n" % today.date())
-        f.write("<hr>\n<ul>\n")
-        for event in food:
+        f.write("<body>\n<h2>Events for %s</h2>\n" % today.date())
+        f.write("<hr>\n<h3>With food:</h3>\n")
+        f.write("<ul>\n")
+        for event in food['food']:
             f.write("<li>%s: (%s - %s)." % \
                     (event.name, str(event.start.time()), str(event.end.time())))
             f.write("<ul><li>%s</li></ul>" % event.food)
             f.write("</li>")
+        f.write("</ul>\n<hr>\n<h3>Other events:</h3>\n")
+        f.write("<ul>\n")
+        for event in food['nofood']:
+            f.write("<li>%s: (%s - %s).</li>" % \
+                    (event.name, str(event.start.time()), str(event.end.time())))
         f.write("</ul>\n<hr>\n</body>\n</html>\n")
         length = f.tell()
         f.seek(0)

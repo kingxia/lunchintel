@@ -1,7 +1,7 @@
 ## HLS food scraper
 ## See what's on the menu today
 
-import datetime, json, sys, urllib
+import datetime, json, re, sys, urllib
 
 food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
               "burger", "pizza", "shake"]
@@ -28,7 +28,7 @@ class Event:
         if not text:
             return None
         food = ''
-        sentences = text.split(".")
+        sentences = re.split('[!.?]', text)
         for sentence in sentences:
             score = 0
             for word in food_terms:
@@ -79,11 +79,9 @@ def get_food_listings(date, day_cache, event_cache):
     for event in date_events:
         events.append(event_cache[event] if event in event_cache else get_event(event))
         event_cache[event] = events[-1]
-    output = []
+    output = {'food':[], 'nofood':[]}
     for event in events:
-        if not event.has_food():
-            continue
-        output.append(event)
+        output['food' if event.has_food() else 'nofood'].append(event)
     return output
 
 def debug(message):
