@@ -18,6 +18,8 @@ import sys
 import shutil
 import mimetypes
 import datetime
+import urlparse
+import cgi
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -97,8 +99,17 @@ class FoodRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         error).  In either case, the headers are sent, making the
         interface the same as for send_head().
         """
+        query = urlparse.urlparse(self.path).query
+        components = urlparse.parse_qs(query)
+        date = cgi.escape(components['date'][0] if 'date' in components else '')
+        day_offset = 2
+        try:
+            day_offset = int(date[:len(date)-1])
+        except ValueError:
+            pass
+        
         today = datetime.datetime.today()
-        today = today + datetime.timedelta(days = 2)
+        today = today + datetime.timedelta(days = day_offset)
         food = food_scraper.get_food_listings(today.date(), self.day_cache, self.event_cache)
         
         f = StringIO()
