@@ -81,7 +81,7 @@ def get_event(url):
         event = Event(None, None, None, None, json_parse_error % url)
     return event
 
-def get_food_listings(date, day_cache, event_cache):
+def get_food_listings(date, day_cache={}, event_cache={}):
     debug('get_food_listings(%s)' % date)
     date_events = day_cache[date] if date in day_cache else get_events(date)
     if date not in day_cache:
