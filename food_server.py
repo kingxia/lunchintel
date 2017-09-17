@@ -116,6 +116,7 @@ class FoodRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         displaypath = cgi.escape(urllib.unquote(self.path))
         f.write('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">')
         f.write("<html>\n<title>Lunch!</title>\n")
+        f.write('<head><link rel="shortcut icon" type="image/x-icon" href="favicon.ico" /></head>\n')
         f.write("<body>\n<h2>Events for %s</h2>\n" % today.date())
         f.write("<hr>\n<h3>With food:</h3>\n")
         f.write("<ul>\n")
