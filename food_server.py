@@ -102,7 +102,7 @@ class FoodRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         query = urlparse.urlparse(self.path).query
         components = urlparse.parse_qs(query)
         date = cgi.escape(components['date'][0] if 'date' in components else '')
-        day_offset = 2
+        day_offset = 0
         try:
             day_offset = int(date[:len(date)-1])
         except ValueError:
@@ -127,7 +127,20 @@ class FoodRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         f.write("<ul>\n")
         for event in food['nofood']:
             f.write("<li>%s</li>" % event.short_str())
-        f.write("</ul>\n<hr>\n</body>\n</html>\n")
+        f.write("</ul>\n<hr>\n")
+        f.write('<form action=".">')
+        f.write('<input type="submit" value="Today" />')
+        f.write('<input type="hidden" name="date" value="0">')
+        f.write('</form>')
+        f.write('<form action=".">')
+        f.write('<input type="submit" value="Tomorrow" />')
+        f.write('<input type="hidden" name="date" value="1">')
+        f.write('</form>')
+        f.write('<form action=".">')
+        f.write('<input type="submit" value="2 days from now" />')
+        f.write('<input type="hidden" name="date" value="2">')
+        f.write('</form>\n')
+        f.write("</body>\n</html>\n")
         length = f.tell()
         f.seek(0)
         self.send_response(200)
