@@ -4,7 +4,7 @@
 import datetime, json, re, sys, urllib
 
 food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
-              "burger", "pizza", "shake", "drinks"]
+              "burger", "pizza", "shake", "drinks", "ice cream"]
 no_food_terms = ["not be served", "no lunch", "no dinner", "not be provided"]
 
 day_url = "http://hls.harvard.edu/calendar/%s"
