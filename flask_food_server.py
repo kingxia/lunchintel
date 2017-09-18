@@ -14,7 +14,7 @@ def get_lunches():
         global day_cache, event_cache
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = 0)
-        date_events = get_events(today.date(), day_cache)
+        date_events = food_scraper.get_events(today.date(), day_cache)
         food = {'food':[], 'nofood':[]}
         #food = food_scraper.get_food_listings(today.date(), day_cache, event_cache)
         page = ''
@@ -25,7 +25,7 @@ def get_lunches():
 
         for event in date_events:
             yield '<br>'
-            new_event = get_event(event, event_cache)
+            new_event = food_scraper.get_event(event, event_cache)
             food['food' if new_event.has_food() else 'nofood'].append(new_event)
 
         page = ''
