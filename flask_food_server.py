@@ -13,7 +13,7 @@ def get_lunches():
 	global day_cache, event_cache
 	today = datetime.datetime.today()
 	today = today + datetime.timedelta(days = 0)
-	food = food_scaper.get_food_listings(today.date(), day_cache, event_cache)
+	food = food_scraper.get_food_listings(today.date(), day_cache, event_cache)
 	return "hi"
     
 @app.route('/favicon.ico')
