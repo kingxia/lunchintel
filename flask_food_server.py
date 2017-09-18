@@ -13,10 +13,7 @@ def get_lunches():
     def generate():
         global day_cache, event_cache
         today = datetime.datetime.today()
-        if request.method == "POST":
-            print request.args
-        else:
-            print 'was not a post request'
+        print request.args.get("date")
         #date_offset = cgi.escape(request.args['date'] if 'date' in request.args else '')
         today = today + datetime.timedelta(days = 0)
         date_events = food_scraper.get_events(today.date(), day_cache)
