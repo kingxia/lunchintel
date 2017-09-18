@@ -83,15 +83,13 @@ def get_event(url, event_cache={}):
     event_data = [line for line in page_data if description_marker in line][0]
     index = [i for i, s in enumerate(page_data) if "Event content" in s][0]
     index_2 = [i for i, s in enumerate(page_data) if ".tribe-events-single-event-description" in s][0]
-    #details = None
-    #start = None
-    #end = None
-    #description = None
-    #error = json_parse_error % url
+
     try:
         details = json.loads(event_data.split("[")[1].split("]")[0])
         start = datetime.datetime.strptime(details['startDate'], time_format)
+        start -= datetime.timedelta(hours=4)
         end = datetime.datetime.strptime(details['endDate'], time_format)
+        end -= datetime.timedelta(hours=4)
         description = ''
         for i in range(index+2, index_2):
             description += page_data[i].strip()
@@ -100,21 +98,6 @@ def get_event(url, event_cache={}):
         event = Event(details['name'].encode('utf8'), start, end, description.encode('utf8'))
     except ValueError:
         event = Event(None, None, None, None, json_parse_error % url)
-        #try:
-        #    details = json.loads(event_data.split("[")[1].split("]")[0])
-        #    start = datetime.datetime.strptime(details['startDate'], time_format_2)
-        #    end = datetime.datetime.strptime(details['endDate'], time_format_2)
-        #    description = ''
-        #    for i in range(index+2, index_2):
-        #        description += page_data[i].strip()
-        #    error = None
-        #except ValueError:
-        #    pass
-    #if start:
-    #    start -= datetime.timedelta(hours=4)
-    #if end:
-    #    end -= datetime.timedelta(hours=4)
-    #event = Event(details['name'].encode('utf8') if details else None, start, end, description.encode('utf8'), error)
     event_cache[url] = event
     return event
 
