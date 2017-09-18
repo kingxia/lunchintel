@@ -1,7 +1,7 @@
 ## HLS food scraper
 ## See what's on the menu today
 
-import datetime, json, re, sys, urllib
+import datetime, json, re, requests, sys
 
 food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
               "burger", "pizza", "shake", "drinks", "ice cream"]
@@ -59,8 +59,8 @@ def extract_url(line):
     return href.split("\"")[1]
 
 def get_filtered_lines(url, marker):
-    lines = urllib.urlopen(url)
-    return [line for line in lines if marker in line]
+    lines = requests.get(url)
+    return [line for line in lines.iter_lines() if marker in line]
 
 # Date should be a datetime object.
 def get_events(date):
