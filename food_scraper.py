@@ -15,12 +15,12 @@ time_format = "%Y-%m-%dT%H:%M:%S+00:00"
 json_parse_error = "Error parsing json from %s"
 
 class Event:
-    def __init__(self, name, start, end, description, link, error=None):
+    def __init__(self, name, start, end, description, url, error=None):
         self.name = name
         self.start = start
         self.end = end
         self.food = self.get_food_sentences(description)
-        self.link = link
+        self.url = url
         self.error = error
 
     def has_food(self):
@@ -78,6 +78,9 @@ def get_event(url, event_cache={}):
     if url in event_cache:
         return event_cache[url]
     event_data = get_filtered_lines(url, description_marker)[0]
+    #url_lines = requests.get(url)
+    #page_data = [line for line in lines.iter_lines()]
+    #index = [i for i, s in enumerate(page_data) if "Event content" in s][0]
     try:
         details = json.loads(event_data.split("[")[1].split("]")[0])
         start = datetime.datetime.strptime(details['startDate'], time_format)
