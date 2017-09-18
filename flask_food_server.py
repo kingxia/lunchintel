@@ -10,11 +10,11 @@ app.logger.setLevel(logging.ERROR)
 
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
-    print request.args.get("date")
     def generate(date_offset=0):
         global day_cache, event_cache
         today = datetime.datetime.today()
-        
+        if not date_offset:
+            date_offset = 0
         #date_offset = cgi.escape(request.args['date'] if 'date' in request.args else '')
         today = today + datetime.timedelta(days = date_offset)
         date_events = food_scraper.get_events(today.date(), day_cache)
@@ -58,7 +58,7 @@ def get_lunches():
         page += '</form>\n'
         page += "</body>\n</html>\n"
         yield page
-    return Response(generate(), mimetype='text/html')
+    return Response(generate(request.args.get("date")), mimetype='text/html')
     
 @app.route('/favicon.ico')
 def favicon():
