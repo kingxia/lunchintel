@@ -77,12 +77,15 @@ def get_event(url, event_cache={}):
     debug('get_event(%s)' % url)
     if url in event_cache:
         return event_cache[url]
-    event_data = get_filtered_lines(url, description_marker)[0]
-    #url_lines = requests.get(url)
-    #page_data = [line for line in lines.iter_lines()]
-    #index = [i for i, s in enumerate(page_data) if "Event content" in s][0]
+    #event_data = get_filtered_lines(url, description_marker)[0]
+    url_lines = requests.get(url)
+    page_data = [line for line in lines.iter_lines()]
+    event_data = [line for line in page_data if description_marker in line][0]
+    index = [i for i, s in enumerate(page_data) if "Event content" in s][0]
     try:
-        details = json.loads(event_data.split("[")[1].split("]")[0])
+        #details = json.loads(event_data.split("[")[1].split("]")[0])
+        details = page_data[index + 2].strip()
+        details = [3:len(details)-4]
         start = datetime.datetime.strptime(details['startDate'], time_format)
         end = datetime.datetime.strptime(details['endDate'], time_format)
         event = Event(details['name'].encode('utf8'), start, end, details['description'].encode('utf8'))
