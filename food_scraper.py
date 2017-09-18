@@ -113,7 +113,7 @@ def get_event(url, event_cache={}):
         start -= datetime.timedelta(hours=4)
     if end:
         end -= datetime.timedelta(hours=4)
-    event = Event(details['name'] if details else None, start, end, description, error)
+    event = Event(details['name'].encode('utf8') if details else None, start, end, description.encode('utf8'), error)
     event_cache[url] = event
     return event
 
