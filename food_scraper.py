@@ -91,8 +91,10 @@ def get_event(url, event_cache={}):
         start = datetime.datetime.strptime(details['startDate'], time_format)
         end = datetime.datetime.strptime(details['endDate'], time_format)
         description = ''
+        print 'grabbing description from %d to %d' % (index, index_2)
         for i in range(index, index_2):
             description += page_data[i].strip()
+        print 'got description: %s' % description
         #description = page_data[index + 2].strip()
         #print 'Description: %s' % description
         #description = [3:len(details-4)]
