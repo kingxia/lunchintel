@@ -13,13 +13,10 @@ def get_lunches():
     def generate(date_offset=0):
         global day_cache, event_cache
         today = datetime.datetime.today()
-        if not date_offset:
-            date_offset = 0
-        #date_offset = cgi.escape(request.args['date'] if 'date' in request.args else '')
         today = today + datetime.timedelta(days = date_offset)
         date_events = food_scraper.get_events(today.date(), day_cache)
         food = {'food':[], 'nofood':[]}
-        #food = food_scraper.get_food_listings(today.date(), day_cache, event_cache)
+
         page = ''
         page += '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">'
         page += "<html>\n<title>There is such a thing</title>\n"
