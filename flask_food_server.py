@@ -13,7 +13,7 @@ def get_lunches():
     def generate():
         global day_cache, event_cache
         today = datetime.datetime.today()
-        #print request.args
+        print flask.request.args
         #date_offset = cgi.escape(request.args['date'] if 'date' in request.args else '')
         today = today + datetime.timedelta(days = 0)
         date_events = food_scraper.get_events(today.date(), day_cache)
