@@ -90,7 +90,7 @@ def get_event(url, event_cache={}):
         start = datetime.datetime.strptime(details['startDate'], time_format)
         end = datetime.datetime.strptime(details['endDate'], time_format)
         description = page_data[index + 2].strip()
-        description = [3:len(details-4)]
+        #description = [3:len(details-4)]
         event = Event(details['name'].encode('utf8'), start, end, description)
         #event = Event(details['name'].encode('utf8'), start, end, details['description'].encode('utf8'))
     except ValueError:
