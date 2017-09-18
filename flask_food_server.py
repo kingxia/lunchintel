@@ -1,10 +1,12 @@
 from flask import Flask
-import datetime, food_scraper, os
+import datetime, food_scraper, logging, os, sys
 
 day_cache = {}
 event_cache = {}
 
 app = Flask(__name__)
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.ERROR)
 
 @app.route('/')
 def get_lunches():
