@@ -12,6 +12,7 @@ event_marker = 'class="url"'
 description_marker = 'type="application/ld+json"'
 
 time_format = "%Y-%m-%dT%H:%M:%S+00:00"
+time_format_2 = "%Y-%m-%dT%H:%M:%S+0000"
 json_parse_error = "Error parsing json from %s"
 
 class Event:
@@ -77,31 +78,42 @@ def get_event(url, event_cache={}):
     debug('get_event(%s)' % url)
     if url in event_cache:
         return event_cache[url]
-    #event_data = get_filtered_lines(url, description_marker)[0]
     url_lines = requests.get(url)
     page_data = [line for line in url_lines.iter_lines()]
     event_data = [line for line in page_data if description_marker in line][0]
     index = [i for i, s in enumerate(page_data) if "Event content" in s][0]
-    index_2 = [i for i, s in enumerate(page_data) if "tribe-events-single-event-description" in s][1]
+    index_2 = [i for i, s in enumerate(page_data) if ".tribe-events-single-event-description" in s][0]
+    details = None
+    start = None
+    end = None
+    description = None
+    error = json_parse_error % url
     try:
         details = json.loads(event_data.split("[")[1].split("]")[0])
-        #details = page_data[index + 2].strip()
-        #print "details: %s, %s" % (details, type(details))
-        #details = [3:len(details)-4]
         start = datetime.datetime.strptime(details['startDate'], time_format)
         end = datetime.datetime.strptime(details['endDate'], time_format)
         description = ''
-        print 'grabbing description from %d to %d' % (index, index_2)
         for i in range(index+2, index_2):
             description += page_data[i].strip()
-        print 'got description: %s' % description
-        #description = page_data[index + 2].strip()
-        #print 'Description: %s' % description
+        error = None
         #description = [3:len(details-4)]
-        event = Event(details['name'].encode('utf8'), start, end, description)
-        #event = Event(details['name'].encode('utf8'), start, end, details['description'].encode('utf8'))
+        #event = Event(details['name'].encode('utf8'), start, end, description)
     except ValueError:
-        event = Event(None, None, None, None, json_parse_error % url)
+        try:
+            details = json.loads(event_data.split("[")[1].split("]")[0])
+            start = datetime.datetime.strptime(details['startDate'], time_format_2)
+            end = datetime.datetime.strptime(details['endDate'], time_format_2)
+            description = ''
+            for i in range(index+2, index_2):
+                description += page_data[i].strip()
+            error = None
+        except ValueError:
+            pass
+    if start:
+        start -= datetime.timedelta(hours=4)
+    if end:
+        end -= datetime.timedelta(hours=4)
+    event = Event(details['name'] if details not None else None, start, end, description, error)
     event_cache[url] = event
     return event
 
