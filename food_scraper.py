@@ -85,7 +85,8 @@ def get_event(url, event_cache={}):
     try:
         #details = json.loads(event_data.split("[")[1].split("]")[0])
         details = page_data[index + 2].strip()
-        details = [3:len(details)-4]
+        print "details: %s, %s" % (details, type(details))
+        #details = [3:len(details)-4]
         start = datetime.datetime.strptime(details['startDate'], time_format)
         end = datetime.datetime.strptime(details['endDate'], time_format)
         event = Event(details['name'].encode('utf8'), start, end, details['description'].encode('utf8'))
