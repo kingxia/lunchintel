@@ -24,7 +24,7 @@ def get_lunches():
         yield page
 
         for event in date_events:
-            yield '<br>'
+            yield '<!-- working... -->'
             new_event = food_scraper.get_event(event, event_cache)
             food['food' if new_event.has_food() else 'nofood'].append(new_event)
 
