@@ -83,13 +83,16 @@ def get_event(url, event_cache={}):
     event_data = [line for line in page_data if description_marker in line][0]
     index = [i for i, s in enumerate(page_data) if "Event content" in s][0]
     try:
-        #details = json.loads(event_data.split("[")[1].split("]")[0])
-        details = page_data[index + 2].strip()
-        print "details: %s, %s" % (details, type(details))
+        details = json.loads(event_data.split("[")[1].split("]")[0])
+        #details = page_data[index + 2].strip()
+        #print "details: %s, %s" % (details, type(details))
         #details = [3:len(details)-4]
         start = datetime.datetime.strptime(details['startDate'], time_format)
         end = datetime.datetime.strptime(details['endDate'], time_format)
-        event = Event(details['name'].encode('utf8'), start, end, details['description'].encode('utf8'))
+        description = page_data[index + 2].strip()
+        description = [3:len(details-4)]
+        event = Event(details['name'].encode('utf8'), start, end, description)
+        #event = Event(details['name'].encode('utf8'), start, end, details['description'].encode('utf8'))
     except ValueError:
         event = Event(None, None, None, None, json_parse_error % url)
     event_cache[url] = event
