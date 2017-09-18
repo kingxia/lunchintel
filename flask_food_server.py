@@ -10,10 +10,10 @@ app.logger.setLevel(logging.ERROR)
 
 @app.route('/')
 def get_lunches():
-	global day_cache, event_cache
-	today = datetime.datetime.today()
-	today = today + datetime.timedelta(days = 0)
-	food = food_scraper.get_food_listings(today.date(), day_cache, event_cache)
+    global day_cache, event_cache
+    today = datetime.datetime.today()
+    today = today + datetime.timedelta(days = 0)
+    food = food_scraper.get_food_listings(today.date(), day_cache, event_cache)
     page = ''
     page += '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">'
     page += "<html>\n<title>Lunch!</title>\n"
@@ -43,7 +43,7 @@ def get_lunches():
     page += '<input type="hidden" name="date" value="2">'
     page += '</form>\n'
     page += "</body>\n</html>\n"
-	return page
+    return page
     
 @app.route('/favicon.ico')
 def favicon():
