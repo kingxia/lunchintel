@@ -2,6 +2,7 @@
 ## See what's on the menu today
 
 import datetime, json, re, requests, sys
+from HTMLParser import HTMLParser
 
 food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
               "burger", "pizza", "shake", "drinks", "ice cream"]
@@ -74,6 +75,20 @@ def get_events(date, day_cache={}):
     day_cache[date] = urls
     return urls
 
+class MLStripper(HTMLParser):
+    def __init__(self):
+        self.reset()
+        self.fed = []
+    def handle_data(self, data):
+        self.fed.append(data)
+    def get_data(self):
+        return ''.join(self.fed)
+
+def strip_tags(html):
+    stripper = MLStripper()
+    stripper.feed(html)
+    return stripper.get_data()
+
 def get_event(url, event_cache={}):
     debug('get_event(%s)' % url)
     if url in event_cache:
@@ -92,7 +107,7 @@ def get_event(url, event_cache={}):
         end -= datetime.timedelta(hours=4)
         description = ''
         for i in range(index+2, index_2):
-            description += page_data[i].strip()
+            description += strip_tags(page_data[i].strip())
         error = None
         #description = [3:len(details-4)]
         event = Event(details['name'].encode('utf8'), start, end, description.encode('utf8'), url)

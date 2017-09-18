@@ -35,7 +35,7 @@ def get_lunches():
         page += "<hr>\n<h3>With food:</h3>\n"
         page += "<ul>\n"
         for event in food['food']:
-            page += '<li>%s. <a href"%s">Link.</a>=' % (event.short_str(), event.url)
+            page += '<li>%s. <a href="%s">Link.</a>' % (event.short_str(), event.url)
             #page += '<ul><li>%s. <a href="%s">Link.</a></li></ul>' % (event.food, event.url)
             page += '<ul><li>%s</li></ul>' % event.food
             page += "</li>"
