@@ -1,5 +1,5 @@
 from flask import Flask
-import datetime, food_scraper
+import datetime, food_scraper, os
 
 day_cache = {}
 event_cache = {}
