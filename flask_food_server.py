@@ -58,7 +58,16 @@ def get_lunches():
         page += '</form>\n'
         page += "</body>\n</html>\n"
         yield page
-    return Response(generate(request.args.get("date")), mimetype='text/html')
+    day_offset = request.args.get("date")
+    if day_offset:
+        try:
+            day_offset = int(day_offset.encode('utf8'))
+        except ValueError:
+            print 'Got a bad day offset: %s' % day_offset
+            day_offset = 0
+    else:
+        day_offset = 0
+    return Response(generate(day_offset), mimetype='text/html')
     
 @app.route('/favicon.ico')
 def favicon():
