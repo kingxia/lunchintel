@@ -1,5 +1,5 @@
 from flask import Flask, Response
-import datetime, food_scraper, logging, os, sys
+import cgi, datetime, food_scraper, logging, os, sys
 
 day_cache = {}
 event_cache = {}
@@ -13,13 +13,15 @@ def get_lunches():
     def generate():
         global day_cache, event_cache
         today = datetime.datetime.today()
+        print request.args
+        #date_offset = cgi.escape(request.args['date'] if 'date' in request.args else '')
         today = today + datetime.timedelta(days = 0)
         date_events = food_scraper.get_events(today.date(), day_cache)
         food = {'food':[], 'nofood':[]}
         #food = food_scraper.get_food_listings(today.date(), day_cache, event_cache)
         page = ''
         page += '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">'
-        page += "<html>\n<title>Lunch!</title>\n"
+        page += "<html>\n<title>There is such a thing</title>\n"
         page += '<head><link rel="shortcut icon" type="image/x-icon" href="favicon.ico" /></head>\n'
         yield page
 
