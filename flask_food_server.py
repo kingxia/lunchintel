@@ -13,3 +13,6 @@ def get_lunches():
 	today = today + datetime.timedelta(days = 0)
 	food = food_scaper.get_food_listings(today.date, day_cache, event_cache)
 	return "hi"
+    
+if __name__ == "__main__":
+    app.run()
