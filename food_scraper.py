@@ -45,6 +45,16 @@ class Event:
                 food += " %s." % sentence.strip()
         return food if len(food) > 0 else None
 
+    def is_lunch(self):
+        if not self.end:
+            return False
+        return self.end =< datetime.time(15)
+
+    def is_dinner(self):
+        if not self.start:
+            return False
+        return self.start >= datetime.time(15)
+
     def short_str(self):
         if self.error:
             return self.error

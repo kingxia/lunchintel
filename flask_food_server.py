@@ -14,28 +14,40 @@ def get_lunches():
         global day_cache, event_cache
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = date_offset)
+        is_working = today.date() not in day_cache
         date_events = food_scraper.get_events(today.date(), day_cache)
-        food = {'food':[], 'nofood':[]}
+        food = {'dinner':[], 'lunch':[], 'nofood':[]}
 
         page = ''
         page += '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">'
         page += "<html>\n<title>There is such a thing</title>\n"
         page += '<head><link rel="shortcut icon" type="image/x-icon" href="favicon.ico" /></head>\n'
+        page += '<body>\n'
+        page += 'Loading data, please be patient.' if is_working else ''
+        
         yield page
 
         for event in date_events:
             yield '<!-- working... -->'
             new_event = food_scraper.get_event(event, event_cache)
-            food['food' if new_event.has_food() else 'nofood'].append(new_event)
+            marker = 'nofood' if not new_event.has_food() else \
+                     'lunch' if new_event.is_lunch() else 'dinner'
+            food[marker].append(new_event)
 
         page = ''
-        page += "<body>\n<h2>Events for %s</h2>\n" % today.date()
-        page += "<hr>\n<h3>With food:</h3>\n"
+        page += "<h2>Events for %s</h2>\n" % today.date()
+        page += "<hr>\n<h3>Lunch:</h3>\n"
         page += "<ul>\n"
-        for event in food['food']:
+        for event in food['lunch']:
             page += '<li>%s <a href="%s">Link.</a>' % (event.short_str(), event.url)
             page += '<ul><li>%s</li></ul>' % event.food
-            page += "</li>"
+            page += "</li>\n"
+        page += "</ul>\n<hr>\n<h3>Dinner:</h3>\n"
+        page += "<ul>\n"
+        for event in food['dinner']:
+            page += '<li>%s <a href="%s">Link.</a>' % (event.short_str(), event.url)
+            page += '<ul><li>%s</li></ul>' % event.food
+            page += "</li>\n"
         page += "</ul>\n<hr>\n<h3>Other events:</h3>\n"
         page += "<ul>\n"
         for event in food['nofood']:
