@@ -48,12 +48,12 @@ class Event:
     def is_lunch(self):
         if not self.end:
             return False
-        return self.end <= datetime.time(15)
+        return self.end.time() <= datetime.time(15)
 
     def is_dinner(self):
         if not self.start:
             return False
-        return self.start >= datetime.time(15)
+        return self.start.time() >= datetime.time(15)
 
     def short_str(self):
         if self.error:
