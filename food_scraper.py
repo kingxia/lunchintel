@@ -145,7 +145,7 @@ def get_event(url, event_cache={}):
     description = ''
     for i in range(index+2, index_2):
         description += strip_tags(page_data[i].strip())
-    error = None if details else json_parse_error % url
+    error = None if json else json_parse_error % url
     event = Event(get_name(details), start, end, location, description.encode('utf8'), url, error)
     event_cache[url] = event
     return event
