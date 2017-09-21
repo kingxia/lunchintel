@@ -17,10 +17,11 @@ time_format_2 = "%Y-%m-%dT%H:%M:%S+0000"
 json_parse_error = "Error parsing json from %s"
 
 class Event:
-    def __init__(self, name, start, end, description, url, error=None):
+    def __init__(self, name, start, end, location, description, url, error=None):
         self.name = name
         self.start = start
         self.end = end
+        self.location = location
         self.food = self.get_food_sentences(description)
         self.url = url
         self.error = error
@@ -58,14 +59,14 @@ class Event:
     def short_str(self):
         if self.error:
             return self.error
-        return "%s: (%s - %s)." % \
-               (self.name, str(self.start.time()), str(self.end.time()))
+        return "%s: (%s, %s - %s)." % \
+               (self.name, self.location, str(self.start.time()), str(self.end.time()))
 
     def __str__(self):
         if self.error:
             return self.error
-        return "%s: (%s - %s).\n\t%s" % \
-               (self.name, str(self.start.time()), str(self.end.time()), self.food)
+        return "%s: (%s, %s - %s).\n\t%s" % \
+               (self.name, self.location, str(self.start.time()), str(self.end.time()), self.food)
 
 def extract_url(line):
     href = line.split(" ")[2]
@@ -115,14 +116,15 @@ def get_event(url, event_cache={}):
         start -= datetime.timedelta(hours=4)
         end = datetime.datetime.strptime(details['endDate'], time_format)
         end -= datetime.timedelta(hours=4)
+        location = details['location']['name'].encode('utf8')
         description = ''
         for i in range(index+2, index_2):
             description += strip_tags(page_data[i].strip())
         error = None
         #description = [3:len(details-4)]
-        event = Event(details['name'].encode('utf8'), start, end, description.encode('utf8'), url)
+        event = Event(details['name'].encode('utf8'), start, end, location, description.encode('utf8'), url)
     except ValueError:
-        event = Event(None, None, None, None, url, json_parse_error % url)
+        event = Event(None, None, None, None, None, url, json_parse_error % url)
     event_cache[url] = event
     return event
 
