@@ -100,6 +100,30 @@ def strip_tags(html):
     stripper.feed(html)
     return stripper.get_data()
 
+def get_time(json, key):
+    if not json:
+        return None
+    try:
+        return datetime.datetime.strptime(json[key], time_format) - \
+               datetime.timedelta(hours=4)
+    except ValueError:
+        pass
+    try:
+        return datetime.datetime.strptime(json[key], time_format_2) - \
+               datetime.timedelta(hours=4)
+    except ValueError:
+        return None
+
+def get_location(json):
+    if not json:
+        return None
+    return json['location']['name'].encode('utf8')
+
+def get_name(json):
+    if not json:
+        return None
+    return json['name'].encode('utf8')
+
 def get_event(url, event_cache={}):
     debug('get_event(%s)' % url)
     if url in event_cache:
@@ -112,19 +136,17 @@ def get_event(url, event_cache={}):
 
     try:
         details = json.loads(event_data.split("[")[1].split("]")[0])
-        start = datetime.datetime.strptime(details['startDate'], time_format)
-        start -= datetime.timedelta(hours=4)
-        end = datetime.datetime.strptime(details['endDate'], time_format)
-        end -= datetime.timedelta(hours=4)
-        location = details['location']['name'].encode('utf8')
-        description = ''
-        for i in range(index+2, index_2):
-            description += strip_tags(page_data[i].strip())
-        error = None
-        #description = [3:len(details-4)]
-        event = Event(details['name'].encode('utf8'), start, end, location, description.encode('utf8'), url)
     except ValueError:
-        event = Event(None, None, None, None, None, url, json_parse_error % url)
+        details = None
+
+    start = get_time(details, 'startDate')
+    end = get_time(details, 'endDate')
+    location = get_location(details)
+    description = ''
+    for i in range(index+2, index_2):
+        description += strip_tags(page_data[i].strip())
+    error = None if json else json_parse_error % url
+    event = Event(get_name(details), start, end, location, description.encode('utf8'), url, error)
     event_cache[url] = event
     return event
 
