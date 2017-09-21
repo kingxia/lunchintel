@@ -48,7 +48,7 @@ class Event:
     def is_lunch(self):
         if not self.end:
             return False
-        return self.end =< datetime.time(15)
+        return self.end <= datetime.time(15)
 
     def is_dinner(self):
         if not self.start:

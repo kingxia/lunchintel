@@ -14,7 +14,6 @@ def get_lunches():
         global day_cache, event_cache
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = date_offset)
-        is_working = today.date() not in day_cache
         date_events = food_scraper.get_events(today.date(), day_cache)
         food = {'dinner':[], 'lunch':[], 'nofood':[]}
 
@@ -23,7 +22,6 @@ def get_lunches():
         page += "<html>\n<title>There is such a thing</title>\n"
         page += '<head><link rel="shortcut icon" type="image/x-icon" href="favicon.ico" /></head>\n'
         page += '<body>\n'
-        page += 'Loading data, please be patient.' if is_working else ''
         
         yield page
 
