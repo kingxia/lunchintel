@@ -136,7 +136,8 @@ def get_event(url, event_cache={}):
         for i in range(index+2, index_2):
             description += strip_tags(page_data[i].strip())
         #encoded = strip_chars(description).encode('utf8')
-        encoded = description.encode('utf8')
+        encoded = description.encode('ascii', 'ignore')
+        #encoded = description.decode('unicode_escape').encode('ascii', 'ignore')
         error = None
         #description = [3:len(details-4)]
         debug('\tcreating event')
