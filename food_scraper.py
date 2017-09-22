@@ -109,36 +109,26 @@ def get_event(url, event_cache={}):
     event_data = [line for line in page_data if description_marker in line][0]
     index = [i for i, s in enumerate(page_data) if "Event content" in s][0]
     index_2 = [i for i, s in enumerate(page_data) if ".tribe-events-single-event-description" in s][0]
-    description = ''
 
     try:
-        print '\tload details'
         details = json.loads(event_data.split("[")[1].split("]")[0])
-        print '\tload name'
-        name = details['name'].encode('ascii', 'ignore')
-        print '\tload start'
+        #name = details['name'].encode('ascii', 'ignore')
+        name = details['name'].decode('utf-8', 'ignore')
         start = datetime.datetime.strptime(details['startDate'], time_format)
         start -= datetime.timedelta(hours=4)
-        print '\tload end'
         end = datetime.datetime.strptime(details['endDate'], time_format)
         end -= datetime.timedelta(hours=4)
-        print '\tload location'
-        location = details['location']['name'].encode('ascii', 'ignore')
-        print '\tload description from %d to %d' % (index+2, index_2)
-        #description = ''
+        #location = details['location']['name'].encode('ascii', 'ignore')
+        location = details['location']['name'].decode('utf-8', 'ignore')
+        description = ''
         for i in range(index+2, index_2):
-            print '\t\tloading %d' % i
             description += strip_tags(page_data[i].strip())
-        print '\tencoding description'
-        #encoded = description.encode('ascii', 'ignore')
         encoded = description.decode('utf-8', 'ignore')
         error = None
         #description = [3:len(details-4)]
-        print '\tload event'
         event = Event(name, start, end, location, encoded, url)
     except ValueError:
         event = Event(None, None, None, None, None, url, json_parse_error % url)
-    b = description.decode('utf-8', 'ignore')
     event_cache[url] = event
     return event
 
