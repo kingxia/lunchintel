@@ -111,29 +111,19 @@ def get_event(url, event_cache={}):
     index_2 = [i for i, s in enumerate(page_data) if ".tribe-events-single-event-description" in s][0]
 
     try:
-        debug('\tloading details...')
         details = json.loads(event_data.split("[")[1].split("]")[0])
-        debug('\tloading name')
         name = details['name'].encode('ascii', 'ignore')
-        debug('\tloading start')
         start = datetime.datetime.strptime(details['startDate'], time_format)
         start -= datetime.timedelta(hours=4)
-        debug('\tloading end')
         end = datetime.datetime.strptime(details['endDate'], time_format)
         end -= datetime.timedelta(hours=4)
-        debug('\tloading location')
         location = details['location']['name'].encode('ascii', 'ignore')
-        debug('\tloading description')
         description = ''
         for i in range(index+2, index_2):
             description += strip_tags(page_data[i].strip())
-        #encoded = strip_chars(description).encode('utf8')
         encoded = description.encode('ascii', 'ignore')
-        #encoded = description.decode('unicode_escape').encode('ascii', 'ignore')
         error = None
         #description = [3:len(details-4)]
-        debug('\tcreating event')
-        #event = Event(details['name'].encode('utf8'), start, end, location, description.encode('utf8'), url)
         event = Event(name, start, end, location, encoded, url)
     except ValueError:
         event = Event(None, None, None, None, None, url, json_parse_error % url)
