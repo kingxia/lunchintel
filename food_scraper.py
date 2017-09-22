@@ -112,13 +112,11 @@ def get_event(url, event_cache={}):
 
     try:
         details = json.loads(event_data.split("[")[1].split("]")[0])
-        #name = details['name'].encode('ascii', 'ignore')
         name = details['name'].decode('utf-8', 'ignore')
         start = datetime.datetime.strptime(details['startDate'], time_format)
         start -= datetime.timedelta(hours=4)
         end = datetime.datetime.strptime(details['endDate'], time_format)
         end -= datetime.timedelta(hours=4)
-        #location = details['location']['name'].encode('ascii', 'ignore')
         location = details['location']['name'].decode('utf-8', 'ignore')
         description = ''
         for i in range(index+2, index_2):
