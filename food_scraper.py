@@ -100,14 +100,6 @@ def strip_tags(html):
     stripper.feed(html)
     return stripper.get_data()
 
-def strip_chars(string):
-    out = ''
-    for i in string:
-        if ord(i) >= 128:
-            continue
-        out += i
-    return out
-
 def get_event(url, event_cache={}):
     debug('get_event(%s)' % url)
     if url in event_cache:
@@ -122,7 +114,7 @@ def get_event(url, event_cache={}):
         debug('\tloading details...')
         details = json.loads(event_data.split("[")[1].split("]")[0])
         debug('\tloading name')
-        name = details['name'].encode('utf8')
+        name = details['name'].encode('ascii', 'ignore')
         debug('\tloading start')
         start = datetime.datetime.strptime(details['startDate'], time_format)
         start -= datetime.timedelta(hours=4)
@@ -130,7 +122,7 @@ def get_event(url, event_cache={}):
         end = datetime.datetime.strptime(details['endDate'], time_format)
         end -= datetime.timedelta(hours=4)
         debug('\tloading location')
-        location = details['location']['name'].encode('utf8')
+        location = details['location']['name'].encode('ascii', 'ignore')
         debug('\tloading description')
         description = ''
         for i in range(index+2, index_2):
