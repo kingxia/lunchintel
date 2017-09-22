@@ -123,10 +123,12 @@ def get_event(url, event_cache={}):
         end -= datetime.timedelta(hours=4)
         print '\tload location'
         location = details['location']['name'].encode('ascii', 'ignore')
-        print '\tload description'
+        print '\tload description from %d to %d' % (index+2, index_2)
         description = ''
         for i in range(index+2, index_2):
+            print '\t\tloading %d' % i
             description += strip_tags(page_data[i].strip())
+        print '\tencoding description'
         encoded = description.encode('ascii', 'ignore')
         error = None
         #description = [3:len(details-4)]
