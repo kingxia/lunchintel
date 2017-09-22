@@ -137,7 +137,7 @@ def get_event(url, event_cache={}):
         event = Event(name, start, end, location, encoded, url)
     except ValueError:
         event = Event(None, None, None, None, None, url, json_parse_error % url)
-    b = description.encode('utf8', 'ignore')
+    b = description.decode('utf-8', 'ignore')
     event_cache[url] = event
     return event
 
