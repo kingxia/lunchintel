@@ -130,7 +130,8 @@ def get_event(url, event_cache={}):
             print '\t\tloading %d' % i
             description += strip_tags(page_data[i].strip())
         print '\tencoding description'
-        encoded = description.encode('ascii', 'ignore')
+        #encoded = description.encode('ascii', 'ignore')
+        encoded = description.decode('utf-8', 'ignore')
         error = None
         #description = [3:len(details-4)]
         print '\tload event'
