@@ -109,6 +109,7 @@ def get_event(url, event_cache={}):
     event_data = [line for line in page_data if description_marker in line][0]
     index = [i for i, s in enumerate(page_data) if "Event content" in s][0]
     index_2 = [i for i, s in enumerate(page_data) if ".tribe-events-single-event-description" in s][0]
+    description = ''
 
     try:
         print '\tload details'
@@ -124,7 +125,7 @@ def get_event(url, event_cache={}):
         print '\tload location'
         location = details['location']['name'].encode('ascii', 'ignore')
         print '\tload description from %d to %d' % (index+2, index_2)
-        description = ''
+        #description = ''
         for i in range(index+2, index_2):
             print '\t\tloading %d' % i
             description += strip_tags(page_data[i].strip())
@@ -136,6 +137,7 @@ def get_event(url, event_cache={}):
         event = Event(name, start, end, location, encoded, url)
     except ValueError:
         event = Event(None, None, None, None, None, url, json_parse_error % url)
+    b = description.encode('ascii', 'ignore')
     event_cache[url] = event
     return event
 
