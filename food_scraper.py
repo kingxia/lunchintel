@@ -100,6 +100,14 @@ def strip_tags(html):
     stripper.feed(html)
     return stripper.get_data()
 
+def strip_chars(string):
+    out = ''
+    for i in string:
+        if ord(i) >= 128:
+            continue
+        out += i
+    return out
+
 def get_event(url, event_cache={}):
     debug('get_event(%s)' % url)
     if url in event_cache:
@@ -127,7 +135,7 @@ def get_event(url, event_cache={}):
         description = ''
         for i in range(index+2, index_2):
             description += strip_tags(page_data[i].strip())
-        encoded = description.encode('utf8')
+        encoded = strip_chars(description).encode('utf8')
         error = None
         #description = [3:len(details-4)]
         debug('\tcreating event')
