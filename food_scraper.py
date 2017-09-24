@@ -5,7 +5,7 @@ import datetime, json, re, requests, sys
 from HTMLParser import HTMLParser
 
 food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
-              "burger", "pizza", "shake", "drinks", "ice cream"]
+              "burger", "pizza", "shake", "drinks", "ice cream", "reception"]
 no_food_terms = ["not be served", "no lunch", "no dinner", "not be provided"]
 
 day_url = "http://hls.harvard.edu/calendar/%s"
