@@ -20,7 +20,17 @@ def get_lunches():
         page = ''
         page += '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">'
         page += "<html>\n<title>There is such a thing</title>\n"
-        page += '<head><link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />'
+        page += '<head>'
+        page += '''<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75643216-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-75643216-2');
+</script>'''
+        page += '<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />'
         page += '<meta id="meta" name="viewport" content="width=device-width; initial-scale=1.0" />'
         page += '</head>\n'
         page += '<body style="margin-left: 12px; margin-top: 12px">\n'
