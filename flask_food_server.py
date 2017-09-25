@@ -8,8 +8,22 @@ app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 
+def error_page():
+    page = ''
+    page += '<h2>Something broke :(</h2>\n'
+    page += 'Please ping me if this continues for more than a few minutes.\n'
+    page += '</body>\n</html>'
+    return page
+
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
+    def try_generate(date_offset=0):
+        try:
+            for item in generate(date_offset):
+                yield item
+        except:
+            yield error_page()
+            
     def generate(date_offset=0):
         global day_cache, event_cache
         today = datetime.datetime.today()
@@ -17,6 +31,7 @@ def get_lunches():
         date_events = food_scraper.get_events(today.date(), day_cache)
         food = {'dinner':[], 'lunch':[], 'nofood':[]}
 
+        ## Common header ##
         page = ''
         page += '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">'
         page += "<html>\n<title>There is such a thing</title>\n"
@@ -34,6 +49,7 @@ def get_lunches():
         page += '<meta id="meta" name="viewport" content="width=device-width, initial-scale=1.0" />'
         page += '</head>\n'
         page += '<body style="margin-left: 12px; margin-top: 12px">\n'
+        ## Common header ##
         
         yield page
 
@@ -43,6 +59,8 @@ def get_lunches():
             marker = 'nofood' if not new_event.has_food() else \
                      'lunch' if new_event.is_lunch() else 'dinner'
             food[marker].append(new_event)
+
+        m = int('a')
 
         page = ''
         page += "<h2>Events for %s</h2>\n" % today.date()
@@ -86,7 +104,7 @@ def get_lunches():
             day_offset = 0
     else:
         day_offset = 0
-    return Response(generate(day_offset), mimetype='text/html')
+    return Response(try_generate(day_offset), mimetype='text/html')
     
 @app.route('/favicon.ico')
 def favicon():
