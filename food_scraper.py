@@ -4,6 +4,8 @@
 import datetime, json, re, requests, sys
 from HTMLParser import HTMLParser
 
+debug = False
+
 food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
               "burger", "pizza", "shake", "drinks", "ice cream", "reception"]
 no_food_terms = ["not be served", "no lunch", "no dinner", "not be provided"]
@@ -145,7 +147,7 @@ def get_food_listings(date, day_cache={}, event_cache={}):
     return output
 
 def debug(message):
-    if __name__ == "__main__":
+    if debug and __name__ == "__main__":
         return
     print message
 
