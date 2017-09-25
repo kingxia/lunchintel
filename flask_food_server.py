@@ -31,7 +31,7 @@ def get_lunches():
   gtag('config', 'UA-75643216-2');
 </script>'''
         page += '<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />'
-        page += '<meta id="meta" name="viewport" content="width=device-width; initial-scale=1.0" />'
+        page += '<meta id="meta" name="viewport" content="width=device-width, initial-scale=1.0" />'
         page += '</head>\n'
         page += '<body style="margin-left: 12px; margin-top: 12px">\n'
         
