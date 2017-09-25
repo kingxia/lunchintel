@@ -147,7 +147,7 @@ def get_food_listings(date, day_cache={}, event_cache={}):
     return output
 
 def debug(message):
-    if not debug and __name__ == "__main__":
+    if not debug or __name__ == "__main__":
         return
     print message
 
