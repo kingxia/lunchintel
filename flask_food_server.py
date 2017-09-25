@@ -60,8 +60,6 @@ def get_lunches():
                      'lunch' if new_event.is_lunch() else 'dinner'
             food[marker].append(new_event)
 
-        m = int('a')
-
         page = ''
         page += "<h2>Events for %s</h2>\n" % today.date()
         page += "<hr>\n<h3>Lunch:</h3>\n"
