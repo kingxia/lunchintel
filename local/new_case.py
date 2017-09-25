@@ -21,7 +21,7 @@ def main():
                else sys.argv[1]
     classname = get_class_name() if len(sys.argv) < 3 \
                 else classmap[sys.argv[2].lower()]
-    target = "../%s/%s/%s/Briefs/%s.docx" % (year, term, classname, casename)
+    target = "../../%s/%s/%s/Briefs/%s.docx" % (year, term, classname, casename)
     copyfile("../Brief Template.docx", target)
     os.startfile(os.path.join(os.path.dirname(os.path.abspath(__file__)), target))
     

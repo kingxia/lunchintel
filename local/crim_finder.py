@@ -53,7 +53,7 @@ def get_strings():
     return strings[1:]
 
 def main():
-    path = "../1L/Fall Term/Criminal Law/%s"
+    path = "../../1L/Fall Term/Criminal Law/%s"
     filename = "Criminal Law Packet 1.pdf"
     starting_page = 1
     pdf = get_pdf(path % filename)
