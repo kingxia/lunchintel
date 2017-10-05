@@ -17,14 +17,14 @@ def error_page():
 
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
-    def try_generate(date_offset=0, log=True):
+    def try_generate(date_offset=0, no_log=False):
         try:
             for item in generate(date_offset, log):
                 yield item
         except:
             yield error_page()
             
-    def generate(date_offset=0, log=True):
+    def generate(date_offset=0, no_log=False):
         global day_cache, event_cache
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = date_offset)
@@ -37,7 +37,7 @@ def get_lunches():
         page += "<html>\n<title>There is such a thing</title>\n"
         page += '<head>'
         ## Add GA
-        if log:
+        if not no_log:
             page += '''<!-- Global Site Tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75643216-2"></script>
 <script>
