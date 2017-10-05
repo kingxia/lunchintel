@@ -103,6 +103,23 @@ def strip_tags(html):
     stripper.feed(html)
     return stripper.get_data()
 
+def try_get(json, key):
+    """Safe json getter when json could be None."""
+    return json.get(key) if json else json
+
+def try_decode(string):
+    """Safe string decoding when string could be None."""
+    return string.decode('utf-8', 'ignore') if string else string
+
+def try_format(time, fmt):
+    """Safe time formatting when time could be None."""
+    return datetime.datetime.strptime(time, fmt) if time else time
+
+def try_offset(time, offset=4):
+    """Safe time offsetting when time could be None.
+    Default to 4-hour offset; the difference between GMT and EST."""
+    return time - datetime.timedelta(hours=offset) if time else time
+
 def get_event(url, event_cache={}):
     debug('get_event(%s)' % url)
     if url in event_cache:
@@ -115,12 +132,14 @@ def get_event(url, event_cache={}):
 
     try:
         details = json.loads(event_data.split("[")[1].split("]")[0])
-        name = details['name'].decode('utf-8', 'ignore')
-        start = datetime.datetime.strptime(details['startDate'], time_format)
-        start -= datetime.timedelta(hours=4)
-        end = datetime.datetime.strptime(details['endDate'], time_format)
-        end -= datetime.timedelta(hours=4)
-        location = details['location']['name'].decode('utf-8', 'ignore')
+        name = try_decode(details.get('name'))
+        #name = details['name'].decode('utf-8', 'ignore')
+        start = try_offset(try_format(details.get('startDate'), time_format))
+        #start -= datetime.timedelta(hours=4)
+        #end = datetime.datetime.strptime(details['endDate'], time_format)
+        #end -= datetime.timedelta(hours=4)
+        end = try_offset(try_format(details.get('endDate'), time_format))
+        location = try_decode(try_get(details.get('location'), 'name'))
         description = ''
         for i in range(index+2, index_2):
             description += strip_tags(page_data[i].strip())
@@ -162,6 +181,3 @@ def main():
         if not event.has_food():
             continue
         print "%s\n" % event
-
-if __name__ == "__main__":
-    main()
