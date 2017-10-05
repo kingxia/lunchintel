@@ -14,6 +14,8 @@ no_food_terms = ["not be served", "no lunch", "no dinner", "not be provided"]
 day_url = "http://hls.harvard.edu/calendar/%s"
 event_marker = 'class="url"'
 description_marker = 'type="application/ld+json"'
+script_start = '<script type="application/ld+json">'
+script_end = '</script>'
 
 time_format = "%Y-%m-%dT%H:%M:%S+00:00"
 time_format_2 = "%Y-%m-%dT%H:%M:%S+0000"
@@ -131,13 +133,10 @@ def get_event(url, event_cache={}):
     index_2 = [i for i, s in enumerate(page_data) if ".tribe-events-single-event-description" in s][0]
 
     try:
-        details = json.loads(event_data.split("[")[1].split("]")[0])
+        json_str = event_data.split(script_start)[1].split(script_end)[0]
+        details = json.loads(json_str[1:len(json_str)-1])
         name = try_decode(details.get('name'))
-        #name = details['name'].decode('utf-8', 'ignore')
         start = try_offset(try_format(details.get('startDate'), time_format))
-        #start -= datetime.timedelta(hours=4)
-        #end = datetime.datetime.strptime(details['endDate'], time_format)
-        #end -= datetime.timedelta(hours=4)
         end = try_offset(try_format(details.get('endDate'), time_format))
         location = try_decode(try_get(details.get('location'), 'name'))
         description = ''
