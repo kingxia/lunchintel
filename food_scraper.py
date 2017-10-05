@@ -111,7 +111,8 @@ def try_get(json, key):
 
 def try_decode(string):
     """Safe string decoding when string could be None."""
-    return string.decode('utf-8', 'ignore') if string else string
+    return string.encode('ascii', 'ignore').decode('utf-8', 'ignore') \
+           if string else string
 
 def try_format(time, fmt):
     """Safe time formatting when time could be None."""
