@@ -17,14 +17,14 @@ def error_page():
 
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
-    def try_generate(date_offset=0):
+    def try_generate(date_offset=0, log=True):
         try:
-            for item in generate(date_offset):
+            for item in generate(date_offset, log):
                 yield item
         except:
             yield error_page()
             
-    def generate(date_offset=0):
+    def generate(date_offset=0, log=True):
         global day_cache, event_cache
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = date_offset)
@@ -37,7 +37,8 @@ def get_lunches():
         page += "<html>\n<title>There is such a thing</title>\n"
         page += '<head>'
         ## Add GA
-        page += '''<!-- Global Site Tag (gtag.js) - Google Analytics -->
+        if log:
+            page += '''<!-- Global Site Tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75643216-2"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -61,7 +62,7 @@ angular.module('lunchintel', [])
             $scope.count++;
         };
     }]
-);'''
+);</script>'''
         page += '</head>\n'
         page += '<body ng-app="lunchintel" style="margin-left: 12px; margin-top: 12px">\n'
         ## Common header ##
@@ -114,6 +115,7 @@ angular.module('lunchintel', [])
         page += "</body>\n</html>\n"
         yield page
     day_offset = request.args.get("date")
+    no_log = request.args.get("ghost")
     if day_offset:
         try:
             day_offset = int(day_offset.encode('utf8'))
@@ -122,7 +124,7 @@ angular.module('lunchintel', [])
             day_offset = 0
     else:
         day_offset = 0
-    return Response(try_generate(day_offset), mimetype='text/html')
+    return Response(try_generate(day_offset, no_log), mimetype='text/html')
     
 @app.route('/favicon.ico')
 def favicon():
