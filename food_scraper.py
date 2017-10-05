@@ -7,7 +7,8 @@ from HTMLParser import HTMLParser
 debug = False
 
 food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
-              "burger", "pizza", "shake", "drinks", "ice cream", "reception"]
+              "burger", "pizza", "shake", "drinks", "ice cream", "reception",
+              "cocktail"]
 no_food_terms = ["not be served", "no lunch", "no dinner", "not be provided"]
 
 day_url = "http://hls.harvard.edu/calendar/%s"
