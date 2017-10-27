@@ -6,6 +6,7 @@ event_cache = {}
 
 app = Flask(__name__)
 app.config.from_object(__name__)
+#app.config['SERVER_NAME'] = 'lunchintel-qa.herokuapp.com'
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 
