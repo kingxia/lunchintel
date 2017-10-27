@@ -47,24 +47,9 @@ def get_lunches():
 
   gtag('config', 'UA-75643216-2');
 </script>'''
-        ## Add AngularJS
-        page += '<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>'
-        page += '<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />'
-        page += '<meta id="meta" name="viewport" content="width=device-width, initial-scale=1.0" />'
-
-        ## Add MVC
-        ## This is so dirty :/
-        page += '''<script>
-angular.module('lunchintel', [])
-    .controller('incrementer', ['$scope', function($scope) {
-        $scope.count = 0;
-        $scope.increment = function() {
-            $scope.count++;
-        };
-    }]
-);</script>'''
+        
         page += '</head>\n'
-        page += '<body ng-app="lunchintel" style="margin-left: 12px; margin-top: 12px">\n'
+        page += '<body style="margin-left: 12px; margin-top: 12px">\n'
         ## Common header ##
         
         yield page
@@ -78,11 +63,6 @@ angular.module('lunchintel', [])
 
         page = ''
         page += "<h2>Events for %s</h2>\n" % today.date()
-        page += '''
-<div ng-controller="incrementer">
-    <button ng-click="increment()">{{count}}</button>
-</div>
-'''
         page += "<hr>\n<h3>Lunch:</h3>\n"
         page += "<ul>\n"
         for event in food['lunch']:
