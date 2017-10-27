@@ -10,6 +10,7 @@ app.config.update(
 )
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
+app.static_folder = 'static'
 
 def error_page():
     page = ''
