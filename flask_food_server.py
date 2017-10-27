@@ -116,16 +116,16 @@ def get_lunches():
         page += '</form>\n'
         page += "</body>\n</html>\n"
         yield page
-    day_offset = request.args.get("date")
+    date_offset = request.args.get("date")
     no_log = request.args.get("ghost")
-    if day_offset:
+    if date_offset:
         try:
-            day_offset = int(day_offset.encode('utf8'))
+            date_offset = int(date_offset.encode('utf8'))
         except ValueError:
-            print 'Got a bad day offset: %s' % day_offset
-            day_offset = 0
+            print 'Got a bad day offset: %s' % date_offset
+            date_offset = 0
     else:
-        day_offset = 0
+        date_offset = 0
     cards = [Card('title1', 'text1', 'https://www.google.com'),
              Card('title2', 'text2', 'https://www.google.com'),
              Card('title3', 'text3', 'https://www.google.com')]
