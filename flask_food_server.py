@@ -1,4 +1,4 @@
-from flask import Flask, Response, request, render_template, stream_template, url_for
+from flask import Flask, Response, request, render_template, url_for
 import cgi, datetime, food_scraper, logging, os, sys
 
 day_cache = {}
@@ -23,8 +23,8 @@ class Card():
 
 def stream_template(template_name, **context):
     app.update_template_context(context)
-    t = app.jinja_env.get_template(template_name)
-    rv = t.stream(context)
+    template = app.jinja_env.get_template(template_name)
+    rv = template.stream(context)
     rv.enable_buffering(5)
     return rv
 
