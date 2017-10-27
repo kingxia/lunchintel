@@ -5,6 +5,9 @@ day_cache = {}
 event_cache = {}
 
 app = Flask(__name__)
+app.config.update(
+    SERVER_NAME='lunchintel'
+)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 
@@ -21,6 +24,7 @@ class Card():
         self.text = text
         self.link = link
 
+# Courtesy of http://flask.pocoo.org/docs/0.12/patterns/streaming/
 def stream_template(template_name, **context):
     app.update_template_context(context)
     template = app.jinja_env.get_template(template_name)
