@@ -33,6 +33,7 @@ def stream_template(template_name, **context):
 
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
+    global day_cache, event_cache
     def try_generate(date_offset=0, no_log=False):
         try:
             for item in generate(date_offset, no_log):
@@ -128,6 +129,16 @@ def get_lunches():
     cards = [Card('title1', 'text1', 'https://www.google.com'),
              Card('title2', 'text2', 'https://www.google.com'),
              Card('title3', 'text3', 'https://www.google.com')]
+
+    today = datetime.datetime.today()
+    today = today + datetime.timedelta(days = date_offset)
+    date_events = food_scraper.get_events(today.date(), day_cache)
+    food = {'dinner':[], 'lunch':[], 'nofood':[]}
+    for event in date_events:
+        new_event = food_scraper.get_event(event, event_cache)
+        marker = 'nofood' if not new_event.has_food() else \
+                 'lunch' if new_event.is_lunch() else 'dinner'
+        food[marker].append(new_event)
     #return Response(try_generate(day_offset, no_log), mimetype='text/html')
     #return render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
     return Response(stream_template('main.html', date="10-27-2017", cards=cards, log=not no_log))
