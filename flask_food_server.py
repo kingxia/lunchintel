@@ -1,4 +1,4 @@
-from flask import Flask, Response, request, render_template, url_for
+from flask import Flask, Response, request, render_template, stream_template, url_for
 import cgi, datetime, food_scraper, logging, os, sys
 
 day_cache = {}
@@ -20,6 +20,13 @@ class Card():
         self.title = title
         self.text = text
         self.link = link
+
+def stream_template(template_name, **context):
+    app.update_template_context(context)
+    t = app.jinja_env.get_template(template_name)
+    rv = t.stream(context)
+    rv.enable_buffering(5)
+    return rv
 
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
@@ -119,7 +126,8 @@ def get_lunches():
              Card('title2', 'text2', 'https://www.google.com'),
              Card('title3', 'text3', 'https://www.google.com')]
     #return Response(try_generate(day_offset, no_log), mimetype='text/html')
-    return render_template('main.html', date="10-27-2017", cards=cards)
+    #return render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
+    return Response(stream_template('main.html', date="10-27-2017", cards=cards, log=not no_log))
     
 @app.route('/favicon.ico')
 def favicon():
