@@ -5,12 +5,9 @@ day_cache = {}
 event_cache = {}
 
 app = Flask(__name__)
-##app.config.update(
-##    SERVER_NAME='lunchintel'
-##)
+app.config.from_object(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
-app.static_folder = 'static'
 
 def error_page():
     page = ''
