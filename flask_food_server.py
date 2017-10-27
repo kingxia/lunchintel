@@ -19,7 +19,7 @@ def error_page():
 def get_lunches():
     def try_generate(date_offset=0, no_log=False):
         try:
-            for item in generate(date_offset, log):
+            for item in generate(date_offset, no_log):
                 yield item
         except:
             yield error_page()
