@@ -109,7 +109,8 @@ def get_lunches():
             day_offset = 0
     else:
         day_offset = 0
-    return Response(try_generate(day_offset, no_log), mimetype='text/html')
+    #return Response(try_generate(day_offset, no_log), mimetype='text/html')
+    return Response(render_template('login.html', error="test"))
     
 @app.route('/favicon.ico')
 def favicon():
