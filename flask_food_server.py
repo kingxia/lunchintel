@@ -15,6 +15,12 @@ def error_page():
     page += '</body>\n</html>'
     return page
 
+class Card():
+    def __init__(self, title, text, link):
+        self.title = title
+        self.text = text
+        self.link = link
+
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
     def try_generate(date_offset=0, no_log=False):
@@ -109,8 +115,11 @@ def get_lunches():
             day_offset = 0
     else:
         day_offset = 0
+    cards = [Card('title1', 'text1', 'https://www.google.com'),
+             Card('title2', 'text2', 'https://www.google.com'),
+             Card('title3', 'text3', 'https://www.google.com')]
     #return Response(try_generate(day_offset, no_log), mimetype='text/html')
-    return render_template('login.html', error="test")
+    return render_template('main.html', date="10-27-2017", cards=cards)
     
 @app.route('/favicon.ico')
 def favicon():
