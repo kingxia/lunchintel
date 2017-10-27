@@ -36,6 +36,11 @@ def get_lunches():
         page += '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">'
         page += "<html>\n<title>There is such a thing</title>\n"
         page += '<head>'
+        ## Add MaterialLite
+        page += '<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">'
+        page += '<link rel="stylesheet" href="material.min.css">'
+        page += '<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>'
+        
         ## Add GA
         if not no_log:
             page += '''<!-- Global Site Tag (gtag.js) - Google Analytics -->
