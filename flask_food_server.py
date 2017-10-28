@@ -43,7 +43,7 @@ def get_lunches():
             yield error_page()
 
     def generate2(date_offset=0, no_log=False):
-            cards = []
+        cards = []
 
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = date_offset)
