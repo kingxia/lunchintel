@@ -51,6 +51,7 @@ def get_lunches():
         date_events = food_scraper.get_events(today.date(), day_cache)
         food = {'dinner':[], 'lunch':[], 'nofood':[]}
         yield '<!-- getting individual events... -->\n'
+        yield '<!-- date events is %s -->\n' % str(date_events)
         for event in date_events:
             yield '<!-- getting one event... -->\n'
             new_event = food_scraper.get_event(event, event_cache)
