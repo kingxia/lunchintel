@@ -65,6 +65,7 @@ def get_lunches():
         yield '<!-- done making cards -->\n'
         yield "hello world\n"
         m = render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
+        yield '<!-- rendered template -->\n'
         yield '<!-- %s -->\n' % str(type(m))
         #try:
         #    yield '<!-- rendering template -->\n'
