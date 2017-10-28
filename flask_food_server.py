@@ -79,8 +79,11 @@ def get_lunches():
         yield '<!-- done making cards -->\n'
         yield "hello world\n"
         cards.append(Card('hi', 'test', 'https://www.google.com'))
-        #m = render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
-        m = render_without_request('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
+        m = None
+        with app.app_context():
+            m = render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
+        
+        #m = render_without_request('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
         yield '<!-- rendered template -->\n'
         yield '<!-- %s -->\n' % str(type(m))
         #try:
