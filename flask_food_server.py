@@ -43,6 +43,7 @@ def get_lunches():
             yield error_page()
 
     def generate2(date_offset=0, no_log=False):
+        global day_cache, event_cache, app
         cards = []
 
         today = datetime.datetime.today()
@@ -64,6 +65,7 @@ def get_lunches():
             cards.append(Card(item.name, item.food, item.url))
         yield '<!-- done making cards -->\n'
         yield "hello world\n"
+        cards.append(Card('hi', 'test', 'https://www.google.com'))
         m = render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
         yield '<!-- rendered template -->\n'
         yield '<!-- %s -->\n' % str(type(m))
