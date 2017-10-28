@@ -1,5 +1,6 @@
 from flask import Flask, Response, request, render_template, send_from_directory, url_for
 import cgi, datetime, food_scraper, logging, os, sys
+import jinja2
 
 day_cache = {}
 event_cache = {}
@@ -31,6 +32,18 @@ def stream_template(template_name, **context):
     rv = template.stream(context)
     rv.enable_buffering(5)
     return rv
+
+def render_without_request(template_name, **template_vars):
+    """
+    Usage is the same as flask.render_template:
+
+    render_without_request('my_template.html', var1='foo', var2='bar')
+    """
+    env = jinja2.Environment(
+        loader=jinja2.PackageLoader('name.ofmy.package','templates')
+    )
+    template = env.get_template(template_name)
+    return template.render(**template_vars)
 
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
@@ -66,7 +79,8 @@ def get_lunches():
         yield '<!-- done making cards -->\n'
         yield "hello world\n"
         cards.append(Card('hi', 'test', 'https://www.google.com'))
-        m = render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
+        #m = render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
+        m = render_without_request('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
         yield '<!-- rendered template -->\n'
         yield '<!-- %s -->\n' % str(type(m))
         #try:
