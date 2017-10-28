@@ -58,10 +58,13 @@ def get_lunches():
             marker = 'nofood' if not new_event.has_food() else \
                      'lunch' if new_event.is_lunch() else 'dinner'
             food[marker].append(new_event)
+        yield '<!-- finished getting events -->\n'
+        yield '<!-- making cards from %s -->\n' % str(food['lunch'])
         for item in food['lunch']:
             cards.append(Card(item.name, item.food, item.url))
+        yield '<!-- done making cards -->\n'
         try:
-            yield render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
+            yield str(render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log))
         except:
             print "got a template error"
             yield error_page()
