@@ -24,27 +24,6 @@ class Card():
         self.text = text
         self.link = link
 
-# Courtesy of http://flask.pocoo.org/docs/0.12/patterns/streaming/
-def stream_template(template_name, **context):
-    #yield '<!--working-->'
-    app.update_template_context(context)
-    template = app.jinja_env.get_template(template_name)
-    rv = template.stream(context)
-    rv.enable_buffering(5)
-    return rv
-
-def render_without_request(template_name, **template_vars):
-    """
-    Usage is the same as flask.render_template:
-
-    render_without_request('my_template.html', var1='foo', var2='bar')
-    """
-    env = jinja2.Environment(
-        loader=jinja2.PackageLoader('name.ofmy.package','templates')
-    )
-    template = env.get_template(template_name)
-    return template.render(**template_vars)
-
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
     global day_cache, event_cache
@@ -65,35 +44,16 @@ def get_lunches():
         date_events = food_scraper.get_events(today.date(), day_cache)
         food = {'dinner':[], 'lunch':[], 'nofood':[]}
         yield '<!-- getting individual events... -->\n'
-        yield '<!-- date events is %s -->\n' % str(date_events)
         for event in date_events:
-            yield '<!-- getting one event... -->\n'
+            yield '<!-- getting event... -->\n'
             new_event = food_scraper.get_event(event, event_cache)
             marker = 'nofood' if not new_event.has_food() else \
                      'lunch' if new_event.is_lunch() else 'dinner'
             food[marker].append(new_event)
-        yield '<!-- finished getting events -->\n'
-        yield '<!-- making cards from %s -->\n' % str(food['lunch'])
         for item in food['lunch']:
             cards.append(Card(item.name, item.food, item.url))
-        yield '<!-- done making cards -->\n'
-        yield "hello world\n"
-        cards.append(Card('hi', 'test', 'https://www.google.com'))
-        m = None
         with app.app_context():
-            m = render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
-        
-        #m = render_without_request('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
-        yield '<!-- rendered template -->\n'
-        yield '<!-- %s -->\n' % str(type(m))
-        yield m
-        #try:
-        #    yield '<!-- rendering template -->\n'
-        #    yield str(render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log))
-        #    yield '<!-- done yielding template -->\n'
-        #except:
-        #    yield '<!-- template error -->\n'
-        #    yield error_page()
+            yield render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
             
     def generate(date_offset=0, no_log=False):
         global day_cache, event_cache
