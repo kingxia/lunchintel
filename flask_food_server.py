@@ -25,6 +25,7 @@ class Card():
 
 # Courtesy of http://flask.pocoo.org/docs/0.12/patterns/streaming/
 def stream_template(template_name, **context):
+    yield '<!--working-->'
     app.update_template_context(context)
     template = app.jinja_env.get_template(template_name)
     rv = template.stream(context)
@@ -139,7 +140,7 @@ def get_lunches():
         food[marker].append(new_event)
     for item in food['lunch']:
         cards.append(Card(item.name, item.food, item.url))
-    #return Response(try_generate(day_offset, no_log), mimetype='text/html')
+    #return Response(try_generate(date_offset, no_log), mimetype='text/html')
     #return render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
     return Response(stream_template('main.html', date="10-27-2017", cards=cards, log=not no_log))
     
