@@ -63,11 +63,16 @@ def get_lunches():
         for item in food['lunch']:
             cards.append(Card(item.name, item.food, item.url))
         yield '<!-- done making cards -->\n'
-        try:
-            yield str(render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log))
-        except:
-            print "got a template error"
-            yield error_page()
+        yield "hello world\n"
+        m = render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
+        yield '<!-- %s -->\n' % str(type(m))
+        #try:
+        #    yield '<!-- rendering template -->\n'
+        #    yield str(render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log))
+        #    yield '<!-- done yielding template -->\n'
+        #except:
+        #    yield '<!-- template error -->\n'
+        #    yield error_page()
             
     def generate(date_offset=0, no_log=False):
         global day_cache, event_cache
