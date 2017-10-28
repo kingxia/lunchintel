@@ -47,18 +47,23 @@ def get_lunches():
 
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = date_offset)
-        yield '<!-- working... -->'
+        yield '<!-- getting all events... -->\n'
         date_events = food_scraper.get_events(today.date(), day_cache)
         food = {'dinner':[], 'lunch':[], 'nofood':[]}
+        yield '<!-- getting individual events... -->\n'
         for event in date_events:
-            yield '<!-- working... -->'
+            yield '<!-- getting one event... -->\n'
             new_event = food_scraper.get_event(event, event_cache)
             marker = 'nofood' if not new_event.has_food() else \
                      'lunch' if new_event.is_lunch() else 'dinner'
             food[marker].append(new_event)
         for item in food['lunch']:
             cards.append(Card(item.name, item.food, item.url))
-        yield render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
+        try:
+            yield render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
+        except:
+            print "got a template error"
+            yield error_page()
             
     def generate(date_offset=0, no_log=False):
         global day_cache, event_cache
