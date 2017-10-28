@@ -1,4 +1,4 @@
-from flask import Flask, Response, request, render_template, url_for
+from flask import Flask, Response, request, render_template, send_from_directory, url_for
 import cgi, datetime, food_scraper, logging, os, sys
 
 day_cache = {}
