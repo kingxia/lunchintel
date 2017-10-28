@@ -30,7 +30,8 @@ def stream_template(template_name, **context):
     template = app.jinja_env.get_template(template_name)
     rv = template.stream(context)
     rv.enable_buffering(5)
-    return rv
+    #return rv
+    yield rv
 
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
