@@ -173,7 +173,7 @@ def get_lunches():
 ##        food[marker].append(new_event)
 ##    for item in food['lunch']:
 ##        cards.append(Card(item.name, item.food, item.url))
-    return Response(try_generate(date_offset, no_log), mimetype='text/html')
+    return Response(generate2(date_offset, no_log), mimetype='text/html')
     #return render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
     #return Response(stream_template('main.html', date="10-27-2017", cards=cards, log=not no_log))
     
