@@ -25,23 +25,40 @@ class Card():
 
 # Courtesy of http://flask.pocoo.org/docs/0.12/patterns/streaming/
 def stream_template(template_name, **context):
-    yield '<!--working-->'
+    #yield '<!--working-->'
     app.update_template_context(context)
     template = app.jinja_env.get_template(template_name)
     rv = template.stream(context)
     rv.enable_buffering(5)
-    #return rv
-    yield rv
+    return rv
 
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
     global day_cache, event_cache
     def try_generate(date_offset=0, no_log=False):
         try:
-            for item in generate(date_offset, no_log):
+            for item in generate2(date_offset, no_log):
                 yield item
         except:
             yield error_page()
+
+    def generate2(date_offset=0, no_log=False):
+            cards = []
+
+        today = datetime.datetime.today()
+        today = today + datetime.timedelta(days = date_offset)
+        yield '<!-- working... -->'
+        date_events = food_scraper.get_events(today.date(), day_cache)
+        food = {'dinner':[], 'lunch':[], 'nofood':[]}
+        for event in date_events:
+            yield '<!-- working... -->'
+            new_event = food_scraper.get_event(event, event_cache)
+            marker = 'nofood' if not new_event.has_food() else \
+                     'lunch' if new_event.is_lunch() else 'dinner'
+            food[marker].append(new_event)
+        for item in food['lunch']:
+            cards.append(Card(item.name, item.food, item.url))
+        yield render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
             
     def generate(date_offset=0, no_log=False):
         global day_cache, event_cache
@@ -128,22 +145,22 @@ def get_lunches():
             date_offset = 0
     else:
         date_offset = 0
-    cards = []
-
-    today = datetime.datetime.today()
-    today = today + datetime.timedelta(days = date_offset)
-    date_events = food_scraper.get_events(today.date(), day_cache)
-    food = {'dinner':[], 'lunch':[], 'nofood':[]}
-    for event in date_events:
-        new_event = food_scraper.get_event(event, event_cache)
-        marker = 'nofood' if not new_event.has_food() else \
-                 'lunch' if new_event.is_lunch() else 'dinner'
-        food[marker].append(new_event)
-    for item in food['lunch']:
-        cards.append(Card(item.name, item.food, item.url))
-    #return Response(try_generate(date_offset, no_log), mimetype='text/html')
+##    cards = []
+##
+##    today = datetime.datetime.today()
+##    today = today + datetime.timedelta(days = date_offset)
+##    date_events = food_scraper.get_events(today.date(), day_cache)
+##    food = {'dinner':[], 'lunch':[], 'nofood':[]}
+##    for event in date_events:
+##        new_event = food_scraper.get_event(event, event_cache)
+##        marker = 'nofood' if not new_event.has_food() else \
+##                 'lunch' if new_event.is_lunch() else 'dinner'
+##        food[marker].append(new_event)
+##    for item in food['lunch']:
+##        cards.append(Card(item.name, item.food, item.url))
+    return Response(try_generate(date_offset, no_log), mimetype='text/html')
     #return render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
-    return Response(stream_template('main.html', date="10-27-2017", cards=cards, log=not no_log))
+    #return Response(stream_template('main.html', date="10-27-2017", cards=cards, log=not no_log))
     
 @app.route('/favicon.ico')
 def favicon():
