@@ -1,23 +1,25 @@
-<div class="mdl-card__title">
-	<h2 class="mdl-card__title-text">
-		{% if not card.error %}
-			{{ card.name }}
-		{% endif %}
-	</h2>
-</div>
-<div class="mdl-card__supporting-text">
-	{% if card.error %}
-		{{ card.error }}
-	{% else %}
-		{% if card.food %}
-			{{ card.food }}<br>
+<div class="demo-card-wide mdl-card mdl-shadow--2dp">
+	<div class="mdl-card__title">
+		<h2 class="mdl-card__title-text">
+			{% if not card.error %}
+				{{ card.name }}
+			{% endif %}
+		</h2>
+	</div>
+	<div class="mdl-card__supporting-text">
+		{% if card.error %}
+			{{ card.error }}
 		{% else %}
-		{{ card.location }}<br>
-		{{ card.time() }}
-	{% endif %}
-</div>
-<div class="mdl-card__actions mdl-card--border">
-	<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="{{ card.url }}" target="_blank">
-		View event details
-	</a>
+			{% if card.food %}
+				{{ card.food }}<br>
+			{% endif %}
+			{{ card.location }}<br>
+			{{ card.time() }}
+		{% endif %}
+	</div>
+	<div class="mdl-card__actions mdl-card--border">
+		<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="{{ card.url }}" target="_blank">
+			View event details
+		</a>
+	</div>
 </div>
