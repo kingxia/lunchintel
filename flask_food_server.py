@@ -29,15 +29,15 @@ def get_lunches():
     global day_cache, event_cache
     def try_generate(date_offset=0, should_log=True):
         try:
-            for item in generate2(date_offset, should_log):
+            for item in generate_lunch_cards(date_offset, should_log):
                 yield item
         except:
             yield render_template('error.html', log=should_log)
 
-    def generate2(date_offset=0, should_log=True):
+    def generate_lunch_cards(date_offset=0, should_log=True):
         global day_cache, event_cache, app
         cards = []
-
+        m = int('a')
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = date_offset)
         yield '<!-- getting all events... -->\n'
@@ -140,6 +140,7 @@ def get_lunches():
             date_offset = 0
     else:
         date_offset = 0
+
 ##    cards = []
 ##
 ##    today = datetime.datetime.today()
