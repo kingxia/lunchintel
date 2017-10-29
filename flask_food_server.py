@@ -27,14 +27,14 @@ class Card():
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
     global day_cache, event_cache
-    def try_generate(date_offset=0, no_log=False):
+    def try_generate(date_offset=0, should_log=True):
         try:
-            for item in generate2(date_offset, no_log):
+            for item in generate2(date_offset, should_log):
                 yield item
         except:
-            yield error_page()
+            yield render_template('error.html', log=should_log)
 
-    def generate2(date_offset=0, no_log=False):
+    def generate2(date_offset=0, should_log=True):
         global day_cache, event_cache, app
         cards = []
 
@@ -53,7 +53,7 @@ def get_lunches():
         for item in food['lunch']:
             cards.append(Card(item.name, item.food, item.url))
         with app.app_context():
-            yield render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
+            yield render_template('main.html', date="10-27-2017", cards=cards, log=should_log)
             
     def generate(date_offset=0, no_log=False):
         global day_cache, event_cache
@@ -153,7 +153,7 @@ def get_lunches():
 ##        food[marker].append(new_event)
 ##    for item in food['lunch']:
 ##        cards.append(Card(item.name, item.food, item.url))
-    return Response(generate2(date_offset, no_log), mimetype='text/html')
+    return Response(try_generate(date_offset, not no_log), mimetype='text/html')
     #return render_template('main.html', date="10-27-2017", cards=cards, no_log=not no_log)
     #return Response(stream_template('main.html', date="10-27-2017", cards=cards, log=not no_log))
     
