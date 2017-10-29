@@ -34,7 +34,8 @@ def get_lunches():
                      'lunch' if new_event.is_lunch() else 'dinner'
             food[marker].append(new_event)
         with app.app_context():
-            yield render_template('main.html', date=today.date(),
+            yield render_template('main.html',
+                                  date=today.date().strftime(date_display),
                                   cards=food, log=should_log)
             
     date_offset = request.args.get("date")
