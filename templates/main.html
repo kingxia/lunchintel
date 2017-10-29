@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 {% block body %}
 	<h2>Events for {{ date }}</h2>
+	<h3>Lunch</h3>
 	{% for card in cards["lunch"] %}
 		{% include "card.html" %}
 	{% endfor %}
 	<hr>
+	<h3>Dinner</h3>
 	{% for card in cards["dinner"] %}
 		{% include "card.html" %}
 	{% endfor %}
 	<hr>
+	<h3>Non-food events</h3>
 	{% for card in cards["nofood"] %}
 		{% include "card.html" %}
 	{% endfor %}
