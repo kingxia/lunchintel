@@ -3,7 +3,9 @@
 	<h2>Events for {{ date }}</h2>
 	{% for card in cards["lunch"] %}
 		<div class="demo-card-wide mdl-card mdl-shadow--2dp">
-			{% extends "card.html" %}
+			{% with card=card %}
+				{% include "card.html" %}
+			{% endwith %}
 		</div>
 	{% endfor %}
 {% endblock %}
