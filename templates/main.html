@@ -4,4 +4,12 @@
 	{% for card in cards["lunch"] %}
 		{% include "card.html" %}
 	{% endfor %}
+	<hr>
+	{% for card in cards["dinner"] %}
+		{% include "card.html" %}
+	{% endfor %}
+	<hr>
+	{% for card in cards["nofood"] %}
+		{% include "card.html" %}
+	{% endfor %}
 {% endblock %}
