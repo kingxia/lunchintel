@@ -71,7 +71,7 @@ class Event:
     def html_description(self):
         if self.error:
             return self.error
-        return "%s<br>%s<br>%s" % (self.food, self.location,
+        return "%s<br>%s<br>%s - %s" % (self.food, self.location,
                                    self.start.strftime(time_display),
                                    self.end.strftime(time_display))
 
