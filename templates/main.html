@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block body %}
+	<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+		<i class="material-icons">chevron left</i>
+	</button>
 	<h2>{{ date }}</h2>
+	<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+		<i class="material-icons">chevron right</i>
+	</button>
 	<h3>Lunch</h3>
 	{% for card in cards["lunch"] %}
 		{% include "card.html" %}
