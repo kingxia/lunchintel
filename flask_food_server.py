@@ -9,12 +9,6 @@ app.config.from_object(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 
-class Card():
-    def __init__(self, title, text, link):
-        self.title = title
-        self.text = text
-        self.link = link
-
 @app.route('/', methods=["GET","POST"])
 def get_lunches():
     def try_generate(date_offset=0, should_log=True):
@@ -27,7 +21,6 @@ def get_lunches():
 
     def generate_lunch_cards(date_offset=0, should_log=True):
         global day_cache, event_cache, app
-        cards = []
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = date_offset)
         yield '<!-- getting all events... -->\n'
@@ -40,8 +33,6 @@ def get_lunches():
             marker = 'nofood' if not new_event.has_food() else \
                      'lunch' if new_event.is_lunch() else 'dinner'
             food[marker].append(new_event)
-        for item in food['lunch']:
-            cards.append(Card(item.name, item.food, item.url))
         with app.app_context():
             yield render_template('main.html', date=today.date(), cards=food, log=should_log)
             
