@@ -15,13 +15,13 @@
 	{% for card in cards["nofood"] %}
 		{% include "card.html" %}
 	{% endfor %}
-	<a class="nav-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="https://www.google.com">
+	<a class="nav-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="?date=0">
 		Today
 	</a>
-	<a class="nav-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+	<a class="nav-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="?date=1">
 		Tomorrow
 	</a>
-	<a class="nav-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+	<a class="nav-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="?date=2">
 		2 days out
 	</a>
 {% endblock %}
