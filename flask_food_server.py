@@ -43,7 +43,7 @@ def get_lunches():
         for item in food['lunch']:
             cards.append(Card(item.name, item.food, item.url))
         with app.app_context():
-            yield render_template('main.html', date=today.date(), cards=cards, log=should_log)
+            yield render_template('main.html', date=today.date(), cards=food, log=should_log)
             
     date_offset = request.args.get("date")
     no_log = request.args.get("ghost")
