@@ -32,7 +32,8 @@ def get_lunches():
             for item in generate_lunch_cards(date_offset, should_log):
                 yield item
         except:
-            yield render_template('error.html', log=should_log)
+            with app.app_context():
+                yield render_template('error.html', log=should_log)
 
     def generate_lunch_cards(date_offset=0, should_log=True):
         global day_cache, event_cache, app
