@@ -14,9 +14,7 @@
 				{% if card.error %}
 					{{ card.error }}
 				{% else %}
-					{% if card.food %}
-						{{ card.food }}<br>
-					{% else %}
+					{{ card.food }}<br>
 					{{ card.location }}<br>
 					{{ card.time() }}
 				{% endif %}
