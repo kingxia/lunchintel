@@ -38,7 +38,6 @@ def get_lunches():
     def generate_lunch_cards(date_offset=0, should_log=True):
         global day_cache, event_cache, app
         cards = []
-        m = int('a')
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = date_offset)
         yield '<!-- getting all events... -->\n'
@@ -54,7 +53,7 @@ def get_lunches():
         for item in food['lunch']:
             cards.append(Card(item.name, item.food, item.url))
         with app.app_context():
-            yield render_template('main.html', date="10-27-2017", cards=cards, log=should_log)
+            yield render_template('main.html', date=today.date(), cards=cards, log=should_log)
             
     def generate(date_offset=0, no_log=False):
         global day_cache, event_cache
