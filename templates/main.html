@@ -1,12 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-	<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
-		<i class="material-icons">chevron left</i>
-	</button>
 	<h2>{{ date }}</h2>
-	<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
-		<i class="material-icons">chevron right</i>
-	</button>
 	<h3>Lunch</h3>
 	{% for card in cards["lunch"] %}
 		{% include "card.html" %}
@@ -21,4 +15,13 @@
 	{% for card in cards["nofood"] %}
 		{% include "card.html" %}
 	{% endfor %}
+	<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+		Today
+	</a>
+	<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+		Tomorrow
+	</a>
+	<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+		2 days out
+	</a>
 {% endblock %}
