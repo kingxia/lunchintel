@@ -35,7 +35,7 @@ def get_lunches():
             food[marker].append(new_event)
         with app.app_context():
             yield render_template('main.html',
-                                  date=today.date().strftime(date_display),
+                                  date=today.date().strftime(food_scraper.date_display),
                                   cards=food, log=should_log)
             
     date_offset = request.args.get("date")
