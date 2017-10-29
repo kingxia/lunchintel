@@ -20,6 +20,7 @@ script_end = '</script>'
 time_format = "%Y-%m-%dT%H:%M:%S+00:00"
 time_format_2 = "%Y-%m-%dT%H:%M:%S+0000"
 json_parse_error = "Error parsing json from %s"
+time_display = "%I:%M %p"
 
 class Event:
     def __init__(self, name, start, end, location, description, url, error=None):
@@ -66,6 +67,13 @@ class Event:
             return self.error
         return "%s: (%s, %s - %s)." % \
                (self.name, self.location, str(self.start.time()), str(self.end.time()))
+
+    def html_description(self):
+        if self.error:
+            return self.error
+        return "%s<br>%s<br>%s" % (self.food, self.location,
+                                   self.start.strftime(time_display),
+                                   self.end.strftime(time_display))
 
     def __str__(self):
         if self.error:
