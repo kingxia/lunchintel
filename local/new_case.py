@@ -22,8 +22,12 @@ def main():
     classname = get_class_name() if len(sys.argv) < 3 \
                 else classmap[sys.argv[2].lower()]
     target = "../../%s/%s/%s/Briefs/%s.docx" % (year, term, classname, casename)
-    copyfile("../../Brief Template.docx", target)
-    os.startfile(os.path.join(os.path.dirname(os.path.abspath(__file__)), target))
+    target_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), target)
+    if not os.path.isfile(target_path):
+        copyfile("../../Brief Template.docx", target)
+        os.startfile(target_path)
+    else:
+        print "Error. File already exists."
     
 if __name__ == "__main__":
     main()
