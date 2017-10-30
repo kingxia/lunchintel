@@ -1,4 +1,5 @@
 import requests, re
+from requests.auth import HTTPBasicAuth
 
 def process_doc(url):
     pass
@@ -15,11 +16,18 @@ content_handlers = {
     'pdf' : process_pdf
 }
 eval_site = 'https://www.law.harvard.edu/students/dean/resources/secure/current.html'
-#name_marker = '<p><strong>'
 name_regex = '<p><strong>.*<\/strong><\/p>'
+# LOL I'm not putting these anywhere near github.
+credentials = '../../credentials.txt'
 
-def get_html(url):
-    lines = requests.get(url)
+def get_credentials(location):
+    f = open(credentials, 'r')
+    lines = [line.strip() for line in f.readlines()]
+    f.close()
+    return HTTPBasicAuth(lines[0], lines[1])
+
+def get_html(url, auth):
+    lines = requests.get(url, auth=auth)
     return [line for line in lines.iter_lines()]
 
 def segment_html(lines):
@@ -37,8 +45,10 @@ def get_content_type(url):
     return url.split('.')[-1]
 
 def main():
-    lines = get_html(eval_site)
+    auth = get_credentials(credentials)
+    lines = get_html(eval_site, auth)
     segments = segment_html(lines)
+    print len(segments)
 
-#if __name__ == '__main__':
-#    main()
+if __name__ == '__main__':
+    main()
