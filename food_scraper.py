@@ -124,10 +124,11 @@ def try_format(time, fmt):
     """Safe time formatting when time could be None."""
     return datetime.datetime.strptime(time, fmt) if time else time
 
-def try_offset(time, offset=4):
+def try_offset(time, offset=4, dst=True):
     """Safe time offsetting when time could be None.
-    Default to 4-hour offset; the difference between GMT and EST."""
-    return time - datetime.timedelta(hours=offset) if time else time
+    Default to 5-hour offset; the difference between GMT and EST, plus DST."""
+    return time - datetime.timedelta(hours=(offset + (1 if dst else 0))) \
+           if time else time
 
 def get_event(url, event_cache={}):
     debug('get_event(%s)' % url)
