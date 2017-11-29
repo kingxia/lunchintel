@@ -24,12 +24,13 @@ time_display = "%I:%M %p"
 date_display = "%A, %b. %d"
 
 class Event:
-    def __init__(self, name, start, end, location, description, url, error=None):
+    def __init__(self, name, start, end, location, description, group, url, error=None):
         self.name = name
         self.start = start
         self.end = end
         self.location = location
         self.food = self.get_food_sentences(description)
+        self.group = group
         self.url = url
         self.error = error
 
@@ -147,15 +148,16 @@ def get_event(url, event_cache={}):
         start = try_offset(try_format(details.get('startDate'), time_format))
         end = try_offset(try_format(details.get('endDate'), time_format))
         location = try_decode(try_get(details.get('location'), 'name'))
+        group = ''
         description = ''
         for i in range(index+2, index_2):
             description += strip_tags(page_data[i].strip())
         encoded = description.decode('utf-8', 'ignore')
         error = None
         #description = [3:len(details-4)]
-        event = Event(name, start, end, location, encoded, url)
+        event = Event(name, start, end, location, encoded, group, url)
     except ValueError:
-        event = Event(None, None, None, None, None, url, json_parse_error % url)
+        event = Event(None, None, None, None, None, None, url, json_parse_error % url)
     event_cache[url] = event
     return event
 
