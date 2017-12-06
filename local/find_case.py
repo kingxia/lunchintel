@@ -12,9 +12,9 @@ classmap = {
 
 def main():
     classname = get_class_name() if len(sys.argv) < 2 \
-            else classmap[sys.argv[2].lower()]
+            else classmap[sys.argv[1].lower()]
     search = raw_input("Case: ") if len(sys.argv) < 3 \
-             else sys.argv[1]
+             else sys.argv[2]
     search = search.lower()
 
     target = "../../%s/%s/%s/Briefs" % (year, term, classname)
