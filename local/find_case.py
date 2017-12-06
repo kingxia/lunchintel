@@ -11,11 +11,11 @@ classmap = {
 }
 
 def main():
-    search = raw_input("Case: ") if len(sys.argv) < 2 \
+    classname = get_class_name() if len(sys.argv) < 2 \
+            else classmap[sys.argv[2].lower()]
+    search = raw_input("Case: ") if len(sys.argv) < 3 \
              else sys.argv[1]
     search = search.lower()
-    classname = get_class_name() if len(sys.argv) < 3 \
-                else classmap[sys.argv[2].lower()]
 
     target = "../../%s/%s/%s/Briefs" % (year, term, classname)
     target_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), target)
