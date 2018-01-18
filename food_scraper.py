@@ -9,9 +9,10 @@ debug = False
 food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
               "burger", "pizza", "shake", "drinks", "ice cream", "reception",
               "cocktail"]
-no_food_terms = ["not be served", "no lunch", "no dinner", "not be provided"]
+no_food_terms = ["not be served", "no lunch", "no dinner", "not be provided", "walk-in"]
 
 day_url = "http://hls.harvard.edu/calendar/%s"
+event_api = "http://hls.harvard.edu/wp-json/tribe/events/v1/events?start_date=%s"
 event_marker = 'class="url"'
 description_marker = 'type="application/ld+json"'
 script_start = '<script type="application/ld+json">'
@@ -88,6 +89,13 @@ def get_filtered_lines(url, marker):
     lines = requests.get(url)
     return [line for line in lines.iter_lines() if marker in line]
 
+def get_rest_api_json(url):
+    site = requests.get(url)
+    if not site.ok:
+        debug('Site is not okay: %s' % site)
+        return {}
+    return json.loads(site.text)
+
 # Date should be a datetime object.
 def get_events(date, day_cache={}):
     debug('get_events(%s)' % date)
@@ -97,6 +105,67 @@ def get_events(date, day_cache={}):
     urls = [extract_url(line) for line in url_lines]
     day_cache[date] = urls
     return urls
+
+def get_datetime(json):
+    if json is None:
+        return None
+    return datetime.datetime(int(json['year']), int(json['month']), int(json['day']),
+                             int(json['hour']), int(json['minutes']), int(json['seconds']))
+
+def get_venue(json):
+    if json is None:
+        return None
+    return json['venue']
+
+def get_organizer(json):
+    if json is None or len(json) == 0:
+        return None
+    return json[0].get('organizer')
+
+# Date should be datetime.date not datetime.datetime
+def get_rest_api_events(date, event_cache={}):
+    debug('get_rest_api_events(%s)' % date)
+    if date in event_cache:
+        return event_cache[date]
+    event_json = get_rest_api_json(event_api % str(date))
+    events = []
+
+    if event_json.get('events') is not None:
+        for event in event_json['events']:
+            debug('\ngetting event')
+            if event is None:
+                continue
+            try:
+                debug('getting name')
+                name = try_decode(event.get('title'))
+                debug('getting url')
+                url = event.get('url')
+                debug('getting description')
+                description = try_decode(event.get('description'))
+                debug('getting start')
+                start = get_datetime(event.get('start_date_details'))
+                debug('getting end')
+                end = get_datetime(event.get('end_date_details'))
+                debug('getting venue')
+                location = try_decode(get_venue(event.get('venue')))
+                debug('getting organizer')
+                group = get_organizer(event.get('organizer'))
+                debug('checking dates')
+
+                if start.date() != date:
+                    debug('passing by')
+                    continue
+                
+                debug('append event')
+                events.append(Event(name, start, end, location, description, group, url))
+            except:
+                debug('got an error parsing: %s' % str(event))
+                url = event.get('url') if event.get('url') is not None else ''
+                events.append(Event(event.get('title'), None, None, None,
+                                    None, None, url, json_parse_error % url))
+
+    event_cache[date] = events
+    return events
 
 class MLStripper(HTMLParser):
     def __init__(self):
@@ -161,15 +230,19 @@ def get_event(url, event_cache={}):
     event_cache[url] = event
     return event
 
-def get_food_listings(date, day_cache={}, event_cache={}):
+def get_food_listings(date, day_cache={}, event_cache={}, e_cache={}):
     debug('get_food_listings(%s)' % date)
-    date_events = day_cache[date] if date in day_cache else get_events(date)
-    if date not in day_cache:
-        day_cache[date] = date_events
-    events = []
-    for event in date_events:
-        events.append(event_cache[event] if event in event_cache else get_event(event))
-        event_cache[event] = events[-1]
+
+    events = e_cache[date] if date in e_cache else get_rest_api_events(date, event_cache=e_cache)
+        
+    
+##    date_events = day_cache[date] if date in day_cache else get_events(date)
+##    if date not in day_cache:
+##        day_cache[date] = date_events
+##    events = []
+##    for event in date_events:
+##        events.append(event_cache[event] if event in event_cache else get_event(event))
+##        event_cache[event] = events[-1]
     output = {'food':[], 'nofood':[]}
     for event in events:
         output['food' if event.has_food() else 'nofood'].append(event)

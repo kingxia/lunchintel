@@ -1,8 +1,9 @@
 from flask import Flask, Response, request, render_template, send_from_directory, url_for
-import cgi, datetime, food_scraper, logging, os, sys
+import cgi, datetime, food_scraper, json, logging, os, requests, sys
 
 day_cache = {}
 event_cache = {}
+e_cache = {}
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -24,12 +25,14 @@ def get_lunches():
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = date_offset)
         yield '<!-- getting all events... -->\n'
-        date_events = food_scraper.get_events(today.date(), day_cache)
+        #date_events = food_scraper.get_events(today.date(), day_cache)
+        date_events = food_scraper.get_rest_api_events(today.date(), e_cache)
         food = {'dinner':[], 'lunch':[], 'nofood':[]}
         yield '<!-- getting individual events... -->\n'
         for event in date_events:
             yield '<!-- getting event... -->\n'
-            new_event = food_scraper.get_event(event, event_cache)
+            new_event = event
+            #new_event = food_scraper.get_event(event, event_cache)
             marker = 'nofood' if not new_event.has_food() else \
                      'lunch' if new_event.is_lunch() else 'dinner'
             food[marker].append(new_event)
@@ -40,6 +43,7 @@ def get_lunches():
             
     date_offset = request.args.get("date")
     no_log = request.args.get("ghost")
+    
     if date_offset:
         try:
             date_offset = int(date_offset.encode('utf8'))
@@ -59,4 +63,4 @@ def favicon():
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=True)
