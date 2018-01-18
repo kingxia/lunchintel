@@ -30,10 +30,6 @@ script_end = '</script>'
 time_format = "%Y-%m-%dT%H:%M:%S+00:00"
 time_format_2 = "%Y-%m-%dT%H:%M:%S+0000"
 
-
-
-
-
 class Event:
     def __init__(self, name, start, end, location, description, group, url, error=None):
         self.name = name
