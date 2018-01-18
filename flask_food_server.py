@@ -1,9 +1,7 @@
 from flask import Flask, Response, request, render_template, send_from_directory, url_for
 import cgi, datetime, food_scraper, json, logging, os, requests, sys
 
-day_cache = {}
 event_cache = {}
-e_cache = {}
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -21,21 +19,18 @@ def get_lunches():
                 yield render_template('error.html', log=should_log)
 
     def generate_lunch_cards(date_offset=0, should_log=True):
-        global day_cache, event_cache, app
+        global event_cache, app
         today = datetime.datetime.today()
         today = today + datetime.timedelta(days = date_offset)
         yield '<!-- getting all events... -->\n'
-        #date_events = food_scraper.get_events(today.date(), day_cache)
-        date_events = food_scraper.get_rest_api_events(today.date(), e_cache)
+        date_events = food_scraper.get_rest_api_events(today.date(), event_cache)
         food = {'dinner':[], 'lunch':[], 'nofood':[]}
         yield '<!-- getting individual events... -->\n'
         for event in date_events:
             yield '<!-- getting event... -->\n'
-            new_event = event
-            #new_event = food_scraper.get_event(event, event_cache)
-            marker = 'nofood' if not new_event.has_food() else \
-                     'lunch' if new_event.is_lunch() else 'dinner'
-            food[marker].append(new_event)
+            marker = 'nofood' if not event.has_food() else \
+                     'lunch' if event.is_lunch() else 'dinner'
+            food[marker].append(event)
         with app.app_context():
             yield render_template('main.html',
                                   date=today.date().strftime(food_scraper.date_display),

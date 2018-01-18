@@ -1,6 +1,10 @@
 ## HLS food scraper
 ## See what's on the menu today
 
+## TODO: Prevent description from cutting off at links.
+## TODO: Add group to view cards.
+## TODO: Remove ugly formatting from unicode conversion.
+
 import datetime, json, re, requests, sys
 from HTMLParser import HTMLParser
 
@@ -11,8 +15,13 @@ food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
               "cocktail"]
 no_food_terms = ["not be served", "no lunch", "no dinner", "not be provided", "walk-in"]
 
-day_url = "http://hls.harvard.edu/calendar/%s"
 event_api = "http://hls.harvard.edu/wp-json/tribe/events/v1/events?start_date=%s"
+json_parse_error = "Error parsing json from %s"
+time_display = "%I:%M %p"
+date_display = "%A, %b. %d"
+
+## DEPRECATED ##
+day_url = "http://hls.harvard.edu/calendar/%s"
 event_marker = 'class="url"'
 description_marker = 'type="application/ld+json"'
 script_start = '<script type="application/ld+json">'
@@ -20,9 +29,10 @@ script_end = '</script>'
 
 time_format = "%Y-%m-%dT%H:%M:%S+00:00"
 time_format_2 = "%Y-%m-%dT%H:%M:%S+0000"
-json_parse_error = "Error parsing json from %s"
-time_display = "%I:%M %p"
-date_display = "%A, %b. %d"
+
+
+
+
 
 class Event:
     def __init__(self, name, start, end, location, description, group, url, error=None):
@@ -81,10 +91,12 @@ class Event:
         return "%s: (%s, %s - %s).\n\t%s" % \
                (self.name, self.location, str(self.start.time()), str(self.end.time()), self.food)
 
+## DEPRECATED ##
 def extract_url(line):
     href = line.split(" ")[2]
     return href.split("\"")[1]
 
+## DEPRECATED ##
 def get_filtered_lines(url, marker):
     lines = requests.get(url)
     return [line for line in lines.iter_lines() if marker in line]
@@ -97,6 +109,7 @@ def get_rest_api_json(url):
     return json.loads(site.text)
 
 # Date should be a datetime object.
+## DEPRECATED ##
 def get_events(date, day_cache={}):
     debug('get_events(%s)' % date)
     if date in day_cache:
@@ -132,31 +145,20 @@ def get_rest_api_events(date, event_cache={}):
 
     if event_json.get('events') is not None:
         for event in event_json['events']:
-            debug('\ngetting event')
             if event is None:
                 continue
             try:
-                debug('getting name')
                 name = try_decode(event.get('title'))
-                debug('getting url')
                 url = event.get('url')
-                debug('getting description')
                 description = try_decode(event.get('description'))
-                debug('getting start')
                 start = get_datetime(event.get('start_date_details'))
-                debug('getting end')
                 end = get_datetime(event.get('end_date_details'))
-                debug('getting venue')
                 location = try_decode(get_venue(event.get('venue')))
-                debug('getting organizer')
                 group = get_organizer(event.get('organizer'))
-                debug('checking dates')
 
                 if start.date() != date:
-                    debug('passing by')
                     continue
                 
-                debug('append event')
                 events.append(Event(name, start, end, location, description, group, url))
             except:
                 debug('got an error parsing: %s' % str(event))
@@ -167,6 +169,7 @@ def get_rest_api_events(date, event_cache={}):
     event_cache[date] = events
     return events
 
+## DEPRECATED ##
 class MLStripper(HTMLParser):
     def __init__(self):
         self.reset()
@@ -176,11 +179,13 @@ class MLStripper(HTMLParser):
     def get_data(self):
         return ''.join(self.fed)
 
+## DEPRECATED ##
 def strip_tags(html):
     stripper = MLStripper()
     stripper.feed(html)
     return stripper.get_data()
 
+## DEPRECATED ##
 def try_get(json, key):
     """Safe json getter when json could be None."""
     return json.get(key) if json else json
@@ -190,16 +195,19 @@ def try_decode(string):
     return string.encode('ascii', 'ignore').decode('utf-8', 'ignore') \
            if string else string
 
+## DEPRECATED ##
 def try_format(time, fmt):
     """Safe time formatting when time could be None."""
     return datetime.datetime.strptime(time, fmt) if time else time
 
+## DEPRECATED ##
 def try_offset(time, offset=4, dst=True):
     """Safe time offsetting when time could be None.
     Default to 5-hour offset; the difference between GMT and EST, plus DST."""
     return time - datetime.timedelta(hours=(offset + (1 if dst else 0))) \
            if time else time
 
+## DEPRECATED ##
 def get_event(url, event_cache={}):
     debug('get_event(%s)' % url)
     if url in event_cache:
@@ -230,19 +238,16 @@ def get_event(url, event_cache={}):
     event_cache[url] = event
     return event
 
-def get_food_listings(date, day_cache={}, event_cache={}, e_cache={}):
+## DEPRECATED ##
+def get_food_listings(date, day_cache={}, event_cache={}):
     debug('get_food_listings(%s)' % date)
-
-    events = e_cache[date] if date in e_cache else get_rest_api_events(date, event_cache=e_cache)
-        
-    
-##    date_events = day_cache[date] if date in day_cache else get_events(date)
-##    if date not in day_cache:
-##        day_cache[date] = date_events
-##    events = []
-##    for event in date_events:
-##        events.append(event_cache[event] if event in event_cache else get_event(event))
-##        event_cache[event] = events[-1]
+    date_events = day_cache[date] if date in day_cache else get_events(date)
+    if date not in day_cache:
+        day_cache[date] = date_events
+    events = []
+    for event in date_events:
+        events.append(event_cache[event] if event in event_cache else get_event(event))
+        event_cache[event] = events[-1]
     output = {'food':[], 'nofood':[]}
     for event in events:
         output['food' if event.has_food() else 'nofood'].append(event)
