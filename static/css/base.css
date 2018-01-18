@@ -5,6 +5,7 @@ body {
 }
 
 .demo-card-wide {
+	display: inline-block;
 	margin-bottom: 16px;
 }
 
