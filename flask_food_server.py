@@ -27,7 +27,7 @@ def get_lunches():
         food = {'dinner':[], 'lunch':[], 'nofood':[]}
         yield '<!-- getting individual events... -->\n'
         for event in date_events:
-            yield '<!-- getting event... -->\n'
+            #yield '<!-- getting event... -->\n'
             marker = 'nofood' if not event.has_food() else \
                      'lunch' if event.is_lunch() else 'dinner'
             food[marker].append(event)
