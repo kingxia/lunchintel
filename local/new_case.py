@@ -2,13 +2,17 @@ import os, sys, time
 from shutil import copyfile
 
 year = "1L"
-term = "Fall Term"
+term = "Spring Term"
 classmap = {
     "civpro":"Civil Procedure",
     "crim":"Criminal Law",
     "lrw":"Legal Reading and Writing",
     "legreg":"Legislation and Regulation",
-    "torts":"Torts"
+    "torts":"Torts",
+    "k":"Contracts",
+    "prop":"Property",
+    "media":"Mass Media",
+    "china":"China Law"
 }
 
 def get_class_name():
