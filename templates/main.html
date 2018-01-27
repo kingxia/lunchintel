@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 {% block body %}
 	<h2>{{ date }}</h2>
+	<h3>Navigation</h3>
+	<a class="nav-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="?date=0">
+		Today
+	</a>
+	<a class="nav-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="?date=1">
+		Tomorrow
+	</a>
+	<a class="nav-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="?date=2">
+		2 days out
+	</a>
 	<h3>Lunch</h3>
 	{% for card in cards["lunch"] %}
 		{% include "card.html" %}
@@ -16,14 +26,4 @@
 		{% include "card.html" %}
 	{% endfor %}
 	<hr>
-	<h3>Navigation</h3>
-	<a class="nav-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="?date=0">
-		Today
-	</a>
-	<a class="nav-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="?date=1">
-		Tomorrow
-	</a>
-	<a class="nav-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="?date=2">
-		2 days out
-	</a>
 {% endblock %}
