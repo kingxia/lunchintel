@@ -12,7 +12,7 @@ debug = False
 
 food_terms = ["lunch", "dinner", "snack", "food", "served", "provided",
               "burger", "pizza", "shake", "drinks", "ice cream", "reception",
-              "cocktail"]
+              "cocktail", "sushi", "Chick-fil-a", "donut"]
 no_food_terms = ["not be served", "no lunch", "no dinner", "not be provided", "walk-in"]
 
 event_api = "http://hls.harvard.edu/wp-json/tribe/events/v1/events?start_date=%s"
