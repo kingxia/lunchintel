@@ -1,7 +1,5 @@
-# HLS
-A collection of scripts I use to make law school a bit easier.
-
-Primarily hosts lunchin.tel, a site for finding lunch talks at HLS, emphasis on lunch. Check it out!
+# lunchintel
+lunchin.tel is a site for finding lunch talks at HLS, emphasis on lunch. Check it out!
 
 new_case.py - creates templated case briefs.  
 food_scraper.py - scrape HLS event calendar for food events.  
